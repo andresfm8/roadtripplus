@@ -1,0 +1,4 @@
+venv
+.env
+python3-virtualenv
+__pycache__
