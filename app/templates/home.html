@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <link href='https://fonts.googleapis.com/css?family=Red Rose' rel='stylesheet'>
+    <style>
+    body {
+        font-family: 'Red Rose';
+    }
+    </style>
+   
+	<!-- Required meta tags -->
+	<meta charset="utf-8" />
+	<meta
+	    name="viewport"
+	    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+	    />
+	<meta property="og:title" content="Personal Portfolio" />
+	<meta property="og:description" content="My Personal Portfolio" />
+	<meta property="og:url" content="{{ url }}" />
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" />
+	<link
+	    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+	    rel="stylesheet"
+	    />
+
+	<link lang="sass" rel="stylesheet" href="/static/styles/main.css" />
+	<link rel="icon" href="/static/img/favicon.ico" type="image/x-icon" />
+	<title>{% block header %}{% endblock %}</title>
+    </head>
+    <header>
+	<a href="/login/">Login</a>
+	<a href="/register/">Register</a>
+    </header>
+    <body>
+	<div class="profile">
+	    <div class="row">
+		<div class="column">
+		    <h1>RoadTrip+</h1>
+		    <h4>{{ data["title"] }}</h4>
+		    <text>{{ data["about"] }}</text>
+		</div>
+		<div class="column">
+		    <a href="/"><img src="/static/img/day65-city-road.png" style="width: 275px; height: 225px" /></a>
+		</div>
+		
+	    </div>
+	</div>
+    </body>
+    {% block body %}{% endblock %}
+</html>
