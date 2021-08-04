@@ -9,3 +9,8 @@ pkg-resources==0.0.0
 typing-extensions==3.10.0.0
 Werkzeug==2.0.1
 zipp==3.5.0
+Flask==2.0.1
+Flask-Migrate==3.0.1
+Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.19
+Werkzeug==2.0.1
