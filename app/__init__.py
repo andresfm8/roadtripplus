@@ -53,13 +53,15 @@ class User(db.Model):
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer)
+    alias = db.Column(db.String())
     address = db.Column(db.String())
     daysToStay = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable=False))
 
-    def __init__(self, order, address, daysToStay):
+    def __init__(self, order, address, alias, daysToStay):
         self.order = order
         self.address = address
+        self.alias = alias
         self.daysToStay = daysToStay
 
 
@@ -142,6 +144,7 @@ def updateUser(userId, userInfo):
     updateRow = Destination.query.filter_by(id=userId).first()
     updateRow.order =userInfo["order"]
     updateRow.address = userInfo["address"]
+    updateRow.alias = userInfo["alias"]
     updateRow.daysToStay =userInfo["daysToStay"]
     db.session.commit()
 
