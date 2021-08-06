@@ -43,6 +43,12 @@ li a:hover {
   clear: both;
 }
 
+h1 {
+  font-style: normal;
+  font-weight: normal;
+  text-indent: 70px;
+}
+
 h2 {
   font-style: normal;
   font-weight: normal;

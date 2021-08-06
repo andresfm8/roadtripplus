@@ -81,7 +81,7 @@ google = oauth.register(
 def landing_page():
     email = dict(session).get('email', None)
     name = dict(session).get('name', None)
-    return render_template("landing.html", title="Roadtrip", about="Something goes here")
+    return render_template("landing.html")
 
 
 @app.route('/planner')
