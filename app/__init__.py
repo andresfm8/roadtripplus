@@ -5,12 +5,10 @@ from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-
 # dotenv setup
 from dotenv import load_dotenv
 from sqlalchemy.orm import backref
 load_dotenv()
-
 
 # App config
 app = Flask(__name__)
@@ -41,13 +39,12 @@ class User(db.Model):
     name = db.Column(db.String())
     profile_pic = db.Column(db.String())
     # 1 -> many relationship with User -> Destination 
-    destination = db.relationship('Destination', backref='user', lazy=True)
+    # destination = db.relationship('Destination', backref='user', lazy=True)
 
     def __init__(self, email, name, profile_pic):
         self.email = email
         self.name = name
         self.profile_pic = profile_pic
-
 
 # Destination model
 class Destination(db.Model):
@@ -56,15 +53,13 @@ class Destination(db.Model):
     alias = db.Column(db.String())
     address = db.Column(db.String())
     daysToStay = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable=False))
+    #user_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable=False))
 
     def __init__(self, order, address, alias, daysToStay):
         self.order = order
         self.address = address
         self.alias = alias
         self.daysToStay = daysToStay
-
-
 
 # oAuth Setup
 oauth = OAuth(app)
@@ -86,12 +81,12 @@ google = oauth.register(
 def landing_page():
     email = dict(session).get('email', None)
     name = dict(session).get('name', None)
-    return render_template("template name here")
+    return render_template("landing.html")
 
 
 @app.route('/planner')
 def planner_page():
-    return render_template("template name here")
+    return render_template("planner.html")
 
 
 @app.route('/login')
@@ -157,4 +152,3 @@ def updateUser(userId, userInfo):
 def deleteUserInfo(userId):
     deleteThis = Destination.query.filter_by(id=userId).first() 
     db.session.delete(deleteThis)
-
