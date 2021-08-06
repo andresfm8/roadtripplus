@@ -3,12 +3,10 @@
 
 <head>
 	<link href='https://fonts.googleapis.com/css?family=Red Rose' rel='stylesheet'>
+	<link href="normalize.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="landing.css">
+	<link href="https://fonts.googleapis.com/css2?family=Red+Rose:wght@700&display=swap" rel="stylesheet">
 	<!-- Move css code into static/styles/main.css -->
-	<style>
-		body {
-			font-family: 'Red Rose';
-		}
-	</style>
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8" />
@@ -18,34 +16,30 @@
 	<meta property="og:url" content="{{ url }}" />
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-		rel="stylesheet" />
 
-	<link lang="sass" rel="stylesheet" href="/static/styles/main.css" />
-	<link rel="icon" href="/static/img/favicon.ico" type="image/x-icon" />
-	<title>{% block header %}{% endblock %}</title>
+	<title>RoadTrip+</title>
 </head>
-<header>
-	<a href="/login/">Login</a>
-	<a href="/register/">Register</a>
-</header>
 
 <body>
-	<div class="profile">
-		<div class="row">
-			<div class="column">
-				<h1>RoadTrip+</h1>
-				<h4>{{ data["title"] }}</h4>
-				<text>{{ data["about"] }}</text>
-			</div>
-			<div class="column">
-				<a href="/"><img src="/static/img/day65-city-road.png" style="width: 275px; height: 225px" /></a>
-			</div>
+	<section class="hero">
 
-		</div>
-	</div>
+        <div class="hero-content">
+           
+           <h1 class="hero-title">
+                RoadTrip+
+           </h1>
+             
+           <h2 class="hero-subtitle">
+                Plan Your Road Trip With Us!
+           </h2>
+
+           <button type="button" class="hero-button" >
+            login/register &raquo;
+            </button>
+        
+        </div>
+    
+    </section>
 </body>
-{% block body %}{% endblock %}
 
 </html>
