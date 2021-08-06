@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <link href='https://fonts.googleapis.com/css?family=Red Rose' rel='stylesheet'>
+      <link rel="stylesheet" type="text/css" href="main.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    </head>
+
+    <body style="background-color: #F9CD5D;">
+
+      <div class="container">
+        <div class="row">
+        <div id="map">maps</div>
+      </div>
+
+      <div>
+        <ul>
+          <li><a class="active" href="#new">save</a></li>
+          <li><a href="#new">new trip</a></li>
+          <li><a href="#remove">remove trip</a></li>
+        </ul>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <h2>Enter Your Starting Location:</h2>
+          <form>
+            <i class="material-icons">location_on</i>
+            <label for="adest">A Destination:</label><br>
+            <input type="text" id="adest" name="adest" value=""><br>
+            <i class="material-icons">location_on</i>
+            <label for="bdest">A Destination:</label><br>
+            <input type="text" id="bdest" name="bdest" value="">
+          </form>
+          <div class="w3-container">
+            <button class="plusbtn">+</button>
+          </div>
+        </div>
+
+        <div class="column">
+          <h2>Your Trip Summary:</h2>
+          <form>
+            <i class="material-icons">schedule</i>
+            <label for="totaltravel">Estimated Total Travel Time:</label><br>
+            <input type="text" name="output" id="output"/><br>
+            <i class="material-icons">time_to_leave</i>
+            <label for="totaldistance">Estimated Total Distance:</label><br>
+            <input type="text" name="output" id="output"/>
+          </form>
+          <button class="savebtn">save</button>
+        </div>
+      </div>
+    </div>
+
+    </body>
+</html>        
