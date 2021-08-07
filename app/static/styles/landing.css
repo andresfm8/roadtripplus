@@ -1,3 +1,5 @@
+/* Landing Page */
+
 body {
   margin: 0;
   padding: 0;
@@ -26,7 +28,7 @@ body {
 .hero-content {
   position: relative;
   text-align: center;
-  font-family: "Monserrat", sans-serif;
+  font-family: "Red Rose";
 }
 
 .hero-title {
@@ -34,6 +36,14 @@ body {
   font-weight: 700;
   margin-bottom: 0;
   color: black;
+  background-color: #f7c230;
+  border-radius: 20px;
+  animation: textanimation 1s ease-in-out;
+}
+
+.hero-subtitle {
+  font-weight: 600;
+  animation: textanimation 1s ease-in-out;
 }
 
 .hero-button {
@@ -55,4 +65,13 @@ body {
 
 .h1 {
   font-size: large;
+}
+
+@keyframes textanimation {
+  0% {
+    letter-spacing: 20px;
+  }
+  100% {
+    letter-spacing: 1px;
+  }
 }
