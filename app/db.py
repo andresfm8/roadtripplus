@@ -83,6 +83,7 @@ def storeInDb(userInfo):
 
 
 # updates userDestinations
+# TODO: test this route and make sure it updates based on user_id, add checks
 def updateUserDestination(userId, userInfo):
     updateRow = Destination.query.filter_by(id=userId).first()
     updateRow.order =userInfo["order"]
@@ -97,3 +98,6 @@ def updateUserDestination(userId, userInfo):
 def deleteUserInfo(userId):
     delete = Destination.query.filter_by(id=userId).first() 
     db.session.delete(delete)
+
+
+# TODO: add more routes that talks to front end to send back User object
