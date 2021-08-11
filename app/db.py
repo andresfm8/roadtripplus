@@ -91,6 +91,7 @@ def updateUserDestination(userId, userInfo):
     updateRow.alias = userInfo["alias"]
     updateRow.daysToStay =userInfo["daysToStay"]
     updateRow.user_id = userId
+    db.session.add(updateRow)
     db.session.commit()
 
 
