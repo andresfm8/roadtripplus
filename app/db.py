@@ -72,7 +72,7 @@ def storeInDb(userInfo):
         if not email:
             error = "email is required."
         if error is None:
-            new_user = Destination(email=email, name=name)
+            new_user = User(email=email, name=name)
             db.session.add(new_user)
             db.session.commit()
             return f"User {email} created successfully"
@@ -82,13 +82,14 @@ def storeInDb(userInfo):
 
 
 
-# updates user
+# updates userDestinations
 def updateUserDestination(userId, userInfo):
     updateRow = Destination.query.filter_by(id=userId).first()
     updateRow.order =userInfo["order"]
     updateRow.address = userInfo["address"]
     updateRow.alias = userInfo["alias"]
     updateRow.daysToStay =userInfo["daysToStay"]
+    updateRow.user_id = userId
     db.session.commit()
 
 
