@@ -29,10 +29,10 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(), unique=True, nullable=False)
-    name = db.Column(db.String())
+    name = db.Column(db.String(), default=None)
     profile_pic = db.Column(db.String())
     # 1 -> many relationship with User -> Destination 
-    destination = db.relationship('Destination', backref='user', lazy=True)
+    trip = db.relationship('Trip', backref='user', lazy=True)
 
     def __init__(self, email, name, profile_pic):
         self.email = email
@@ -42,6 +42,20 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.email}, '{self.name}')"
 
+# Trip Model
+class Trip(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique= True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    destination = db.relationship('Destination', backref="trip", lazy = True)
+
+    def __init__(self, name, user_id):
+        self.name = name
+        self.user_id = user_id
+
+    def __repr__(self):
+        return f"Trip('{self.name}', '{self.user_id}')"
+
 # Destination model
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,18 +63,18 @@ class Destination(db.Model):
     alias = db.Column(db.String())
     address = db.Column(db.String())
     daysToStay = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    trip_id = db.Column(db.Integer, db.ForeignKey('trip.id'))
 
-    def __init__(self, order, address, alias, daysToStay, user_id):
+    def __init__(self, order, address, alias, daysToStay, trip_id):
         self.order = order
         self.address = address
         self.alias = alias
         self.daysToStay = daysToStay
-        self.user_id = user_id
+        self.trip_id = trip_id
 
     
     def __repr__(self):
-        return f"Destinations('{self.order}', '{self.alias}', '{self.address}', '{self.daysToStay}', '{self.user_id})"
+        return f"Destinations('{self.order}', '{self.alias}', '{self.address}', '{self.daysToStay}', '{self.trip_id})"
 
 # stores user information into db
 def storeInDb(userInfo):
