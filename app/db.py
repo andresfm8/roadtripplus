@@ -65,13 +65,14 @@ class Destination(db.Model):
 # stores user information into db
 def storeInDb(userInfo):
     email = userInfo['email']
+    name = userInfo["name"]
     # Will only store email if email does not already exist in db
     if Destination.query.filter_by(email=email).first() is not None:
         error = None
         if not email:
             error = "email is required."
         if error is None:
-            new_user = Destination(email)
+            new_user = Destination(email=email, name=name)
             db.session.add(new_user)
             db.session.commit()
             return f"User {email} created successfully"
@@ -82,7 +83,7 @@ def storeInDb(userInfo):
 
 
 # updates user
-def updateUser(userId, userInfo):
+def updateUserDestination(userId, userInfo):
     updateRow = Destination.query.filter_by(id=userId).first()
     updateRow.order =userInfo["order"]
     updateRow.address = userInfo["address"]
@@ -93,5 +94,5 @@ def updateUser(userId, userInfo):
 
 #deletes userData
 def deleteUserInfo(userId):
-    deleteThis = Destination.query.filter_by(id=userId).first() 
-    db.session.delete(deleteThis)
+    delete = Destination.query.filter_by(id=userId).first() 
+    db.session.delete(delete)
