@@ -6,14 +6,13 @@ body {
   padding: 0;
 }
 
-/* Planner stuff? */
+/* Planner Styles */
 ul {
   list-style-type: none;
   margin: 0 auto;
   padding: 0;
   overflow: hidden;
-  background-color: rgb(255, 255, 255);
-  border-radius: 20px;
+  background-color: #f7c230;
   text-align: center;
 }
 
@@ -21,16 +20,21 @@ li {
   display: inline-block;
 }
 
-li a {
+li button {
   display: inline-block;
+  font-family: "Red Rose";
   color: black;
+  border: none;
+  background-color: #f7c230;
   text-align: center;
+  font-size: medium;
   padding: 14px 16px;
   text-decoration: none;
+  cursor: pointer;
 }
 
-li a:hover {
-  background-color: rgba(249, 205, 93, 0.65);
+li button:hover {
+  background-color: #f9cd5d;
 }
 
 h1 {
@@ -42,7 +46,6 @@ h1 {
 h2 {
   font-style: normal;
   font-weight: normal;
-  text-indent: 70px;
 }
 
 h3 {
@@ -65,8 +68,10 @@ input[type="text"] {
   height: 100vh;
   grid-template-rows: 1fr 5fr 1fr;
 }
+
 .column {
   float: left;
+  text-align: center;
   width: 50%;
 }
 
@@ -81,6 +86,7 @@ input[type="text"] {
 }
 
 .plusbtn {
+  background-color: rgb(255, 255, 255);
   border-radius: 50%;
   border: none;
   padding: 30px;
@@ -91,26 +97,28 @@ input[type="text"] {
   font-size: 40px;
   margin-right: auto;
   margin-left: auto;
-  margin-top: 80px;
+  margin-top: 60px;
+  margin-bottom: 30px;
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
 
 .savebtn {
+  background-color: #fff;
   border-radius: 20px;
   font-family: "Red Rose";
   border: none;
-  padding: 30px;
+  padding: 15px;
   justify-content: center;
   align-items: center;
   display: flex;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 15px;
   margin-right: auto;
-  margin-left: 200px;
-  margin-top: 80px;
-  height: 5px;
+  margin-left: auto;
+  margin-top: 60px;
+  height: 1px;
   width: 80px;
 }
 
@@ -128,9 +136,47 @@ input[type="text"] {
   direction: ltr;
 }
 
+.popup {
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  height: 150px;
+  width: 400px;
+  background: #f7c230;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+input[type="triptext"] {
+  outline: rgba(0, 0, 0, 0.6);
+  width: 95%;
+  height: 30px;
+  border-radius: 15px;
+  border: rgb(255, 255, 255);
+  outline: none;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+}
+
 /* Google Maps Styles */
 #map {
-  height: 400px;
+  height: 60vh;
   width: 80%;
   margin: 0 auto;
 }
@@ -149,4 +195,4 @@ input[type="text"] {
 }
 .custom-map-control-button:hover {
   background: #ebebeb;
-} 
+}

@@ -1,0 +1,81 @@
+body {
+  background: #f7c230;
+  font-family: "Red Rose";
+  font-style: normal;
+  font-weight: normal;
+}
+
+.grid {
+  margin: 80px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+  align-items: center;
+}
+
+.grid > article {
+  background: white;
+  border: none;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  text-align: center;
+  width: 250px;
+  transition: transform 0.3s;
+}
+
+.grid > article:hover {
+  transform: translateY(5px);
+  box-shadow: 2px 2px 26px 0px rgba(0, 0, 0, 0.3);
+}
+
+.grid > article img {
+  width: 100%;
+  height: 250px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.text {
+  padding: 0 20px 20px;
+}
+
+.text h3 {
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.text button {
+  background: #f7c230;
+  border-radius: 20px;
+  border: none;
+  color: black;
+  padding: 10px;
+  width: 100%;
+  font-weight: normal;
+  font-style: normal;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .grid > article {
+    text-align: center;
+  }
+}
+
+h1 {
+  font-family: "Red Rose";
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+}
