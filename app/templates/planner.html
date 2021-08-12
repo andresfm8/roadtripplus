@@ -27,11 +27,11 @@
 
     <div class="row">
       <div class="column">
-        <h2>Your Destinations:</h2>
+        <h2>Enter Your Destinations:</h2>
         <form id="location">
           <i class="material-icons">location_on</i>
-          <label for="adest">Enter Starting Location:</label><br>
-          <input type="text" id="adest" name="adest" value=""><br>
+          <label for="adest">A Destination:</label><br>
+          <input id="pac-input" class="controls" type="text" placeholder="Search Box" />
         </form>
         <div class="w3-container">
           <button onclick="addDestination('location')" class="plusbtn">+</button>
@@ -75,7 +75,7 @@
   <script src="../static/js/google-maps/googlemaps.util.js"></script>
   <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCq9TNLByqQT1iubkxSlxuzsRUSd6o_lM&callback=initMap&libraries=&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0&callback=initMap&libraries=places&v=weekly"
     async></script>
 </body>
 
