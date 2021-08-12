@@ -5,6 +5,8 @@
   <link href='https://fonts.googleapis.com/css?family=Red Rose' rel='stylesheet'>
   <link rel="stylesheet" type="text/css" href="../static/styles/main.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="../static/js/main.js"></script>
+  <title>RoadTrip+</title>
 </head>
 
 <body style="background-color: #f7c230;">
@@ -25,17 +27,14 @@
 
     <div class="row">
       <div class="column">
-        <h2>Enter Your Destinations:</h2>
-        <form>
+        <h2>Your Destinations:</h2>
+        <form id="location">
           <i class="material-icons">location_on</i>
-          <label for="adest">Destination:</label><br>
+          <label for="adest">Enter Starting Location:</label><br>
           <input type="text" id="adest" name="adest" value=""><br>
-          <i class="material-icons">location_on</i>
-          <label for="bdest">Destination:</label><br>
-          <input type="text" id="bdest" name="bdest" value="">
         </form>
         <div class="w3-container">
-          <button class="plusbtn">+</button>
+          <button onclick="addDestination('location')" class="plusbtn">+</button>
         </div>
       </div>
 
