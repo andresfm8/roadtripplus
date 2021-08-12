@@ -15,9 +15,9 @@
 
     <div>
       <ul>
-        <li><a class="active" href="#save">save trip</a></li>
-        <li><a href="#new">new trip</a></li>
-        <li><a href="#remove">remove trip</a></li>
+        <li><button class="active" id="savebtn">save trip</button></li>
+        <li><button class="navbtn">view trips</button></li>
+        <li><button class="navbtn">remove trip</button></li>
       </ul>
     </div>
 
@@ -48,10 +48,28 @@
           <label for="totaldistance">Estimated Total Distance:</label><br>
           <input type="text" name="output" id="output" />
         </form>
-        <button class="savebtn">save</button>
       </div>
     </div>
   </div>
+
+  <div class="popup">
+    <div class="popup-content">
+      <img src="https://img.icons8.com/ios/50/000000/cancel.png" alt="Close" class="close">
+      <label>Trip Name:</label><br>
+      <input type="triptext" placeholder="Enter Name">
+      <a href="#" class="savebtn">save</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("savebtn").addEventListener("click", function(){
+      document.querySelector(".popup").style.display = "flex";
+    })
+
+    document.querySelector(".close").addEventListener("click", function(){
+      document.querySelector(".popup").style.display = "none";
+    })
+  </script>
 
   <!-- Eventually move it to main.js and call googlemaps.util from there. -->
   <script src="../static/js/google-maps/googlemaps.util.js"></script>
