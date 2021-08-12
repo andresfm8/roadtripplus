@@ -16,7 +16,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config['SESSION_COOKIE_NAME'] = 'google-login-session'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
 # PostgresSQL congig
-app.config("SQLALCHEMY_DATABASE_URI") = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 # app.config[
 #     "SQLALCHEMY_DATABASE_URI"
 # ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
