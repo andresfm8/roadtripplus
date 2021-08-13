@@ -1,39 +1,40 @@
-version '3'
+version: "3"
 services:
-  app:
-    container_name: app
+  web:
+    container_name: web
     build: .
     restart: always
-    env_file: 
+    env_file:
       - .env
-    volumes: .:/roadtripplus
-    depends_on: 
+    volumes:
+      - .:/roadtripplus
+    depends_on:
       - db
 
   db:
     container_name: db
     image: postgres
     restart: always
-    env_file: 
+    env_file:
       - .env
-    volumes: 
+    volumes:
       - mydatabase:/var/lib/postgresql/data
 
   nginx:
     container_name: nginx
     image: jonasal/nginx-certbot:latest
     restart: unless-stopped
-    env_file: 
-      -./nginx-certbot.env
-    ports: 
+    env_file:
+      - ./nginx-certbot.env
+    ports:
       - 80:80
       - 443:443
-    volumes: 
+    volumes:
       - nginx_secrets:/etc/letsencrypt
-      - ./user_conf.d:/etc/nginx/user_conf.d      
-    depends_on: 
-      app
+      - ./user_conf.d:/etc/nginx/user_conf.d
+    depends_on:
+      - web
 
 volumes:
-  mydatabase: 
-  nginx_secrets: 
+  mydatabase:
+  nginx_secrets:
