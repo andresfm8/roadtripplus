@@ -47,6 +47,9 @@ $ flask run
 
 # :world_map:Features
 
+* A Google Maps which displays a customizable route
+* A trip summary including the total time and distance of the trip
+
 # :computer:Technologies
 
 * Front-End: HTML, CSS
