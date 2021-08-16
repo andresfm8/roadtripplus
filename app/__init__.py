@@ -4,7 +4,6 @@ from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
 # dotenv setup
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,6 +28,8 @@ app.config[
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # oAuth Setup
 oauth = OAuth(app)
