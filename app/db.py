@@ -20,6 +20,7 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.email}, '{self.name}')"
 
+
 # Trip Model
 class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +34,7 @@ class Trip(db.Model):
 
     def __repr__(self):
         return f"Trip('{self.name}', '{self.user_id}')"
+
 
 # Destination model
 class Destination(db.Model):
@@ -57,6 +59,7 @@ class Destination(db.Model):
             + "'{self.daysToStay}', '{self.trip_id})"
         )
 
+
 # stores user information into db
 def storeInDb(userInfo):
     email = userInfo["email"]
@@ -76,6 +79,7 @@ def storeInDb(userInfo):
     else:
         return
 
+
 # updates userDestinations
 # TODO: test this route and make sure it updates based on user_id, add checks
 def updateUserDestination(userId, userInfo):
@@ -88,9 +92,11 @@ def updateUserDestination(userId, userInfo):
     db.session.add(updateRow)
     db.session.commit()
 
+
 # deletes userData
 def deleteUserInfo(userId):
     delete = Destination.query.filter_by(id=userId).first()
     db.session.delete(delete)
+
 
 # TODO: add more routes that talks to front end to send back User object
