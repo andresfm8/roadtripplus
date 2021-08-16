@@ -2,3 +2,4 @@ venv
 .env
 python3-virtualenv
 __pycache__
+nginx-certbot.env

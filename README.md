@@ -1,16 +1,23 @@
 # RoadTrip+
 
-Description and link to domain goes here
+This is a road trip planner website allowing you to create a trip by adding destinations to view on a map. You will also be able to view a summary of your road trip which includes the total time and distance of the trip. 
+
+:round_pushpin:Check it out: domain here
 
 ## Table of Contents
 
-+ [Setup](#setup)
-  - [Installation](#intsallation)
-  - [Usage](#usage)
-+ [Features](#features)
-  - [TBD](#tbd)
+- [Motivation](#motivation)
+- [Setup](#setup)
+  * [Installation](#installation)
+  * [Usage](#usage)
+- [Features](#features)
+- [Technologies](#technologies)
 
-# Setup
+# :motorway:Motivation
+
+We were interested in creating an organized and easy to use road trip planner to make planning more fun. 
+
+# :gear:Setup
 ## Installation
 
 Make sure you have python3 and pip installed
@@ -38,5 +45,12 @@ $ export FLASK_ENV=development
 $ flask run
 ```
 
-# Features
-## TBD
+# :world_map:Features
+
+* A Google Maps which displays a customizable route
+* A trip summary including the total time and distance of the trip
+
+# :computer:Technologies
+
+* Front-End: HTML, CSS
+* Back-End: Python, Flask

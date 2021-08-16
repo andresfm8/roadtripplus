@@ -9,14 +9,12 @@ from flask import (
     request,
 )
 from datetime import timedelta
-from flask_sqlalchemy import SQLAlchemy
-
+from __init__ import db
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-app = Flask(__name__)
 # app.secret_key = os.getenv("APP_SECRET_KEY")
 # app.config("SQLALCHEMY_DATABASE_URI") = 'sqlite:///test.db'
 # app.config[
@@ -30,9 +28,6 @@ app = Flask(__name__)
 # )
 
 # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
 
 # User model
 class User(db.Model):
