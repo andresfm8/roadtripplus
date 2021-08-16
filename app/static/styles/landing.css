@@ -37,12 +37,14 @@ body {
   margin-bottom: 0;
   color: black;
   background-color: #f7c230;
+  min-width: 400px;
   border-radius: 20px;
   animation: textanimation 1s ease-in-out;
 }
 
 .hero-subtitle {
   font-weight: 600;
+  font-size: 1.5rem;
   animation: textanimation 1s ease-in-out;
 }
 
