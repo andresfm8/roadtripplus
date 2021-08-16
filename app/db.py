@@ -1,14 +1,3 @@
-import os
-from flask import (
-    Flask,
-    redirect,
-    url_for,
-    session,
-    render_template,
-    send_from_directory,
-    request,
-)
-from datetime import timedelta
 from __init__ import db
 from dotenv import load_dotenv
 

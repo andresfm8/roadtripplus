@@ -4,9 +4,7 @@ from flask import (
     redirect,
     url_for,
     session,
-    render_template,
-    send_from_directory,
-    request,
+    render_template
 )
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
@@ -38,6 +36,8 @@ app.config[
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # oAuth Setup
 oauth = OAuth(app)
