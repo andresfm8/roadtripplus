@@ -33,4 +33,4 @@ jobs:
           black: true
           flake8: true
           auto_fix: true
-          flake8_args: "--max-line-length=100 --ignore=W291"
+          flake8_args: "--max-line-length=100 --ignore=W291, F541, W504"
