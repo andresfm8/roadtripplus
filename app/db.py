@@ -55,7 +55,7 @@ class Destination(db.Model):
             f"Destinations("
             + "'{self.order}', '{self.alias}', '{self.address}', "
             + "'{self.daysToStay}', '{self.trip_id})"
-            )
+        )
 
 # stores user information into db
 def storeInDb(userInfo):
