@@ -1,13 +1,5 @@
 import os
-from flask import (
-    Flask,
-    redirect,
-    url_for,
-    session,
-    render_template,
-    send_from_directory,
-    request,
-)
+from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
@@ -59,8 +51,8 @@ google = oauth.register(
 
 @app.route("/")
 def landing_page():
-    email = dict(session).get("email", None)
-    name = dict(session).get("name", None)
+    # email = dict(session).get("email", None)
+    # name = dict(session).get("name", None)
     return render_template("landing.html")
 
 
@@ -79,9 +71,9 @@ def login():
 @app.route("/authorize")
 def authorize():
     google = oauth.create_client("google")  # create the google oauth client
-    token = (
-        google.authorize_access_token()
-    )  # Access token from google (needed to get user info)
+    # token = (
+    #    google.authorize_access_token()
+    # )  # Access token from google (needed to get user info)
     resp = google.get("userinfo")  # userinfo contains stuff u specificed in the scrope
     user_info = resp.json()
     # store email into db
