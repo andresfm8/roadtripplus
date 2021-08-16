@@ -54,17 +54,9 @@ class Destination(db.Model):
         self.trip_id = trip_id
 
     def __repr__(self):
-<<<<<<< HEAD
         return ( f"Destinations(" +
                 "'{self.order}', '{self.alias}', '{self.address}', " +
                 "'{self.daysToStay}', '{self.trip_id}')")
-=======
-        return (
-            f"Destinations("
-            + "'{self.order}', '{self.alias}', '{self.address}', "
-            + "'{self.daysToStay}', '{self.trip_id})"
-        )
->>>>>>> f3cea3a64b3f1a7e60b6211b0872c39e781b6e34
 
 
 # stores user information into db
