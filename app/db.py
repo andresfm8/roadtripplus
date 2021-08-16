@@ -14,21 +14,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
-# app.secret_key = os.getenv("APP_SECRET_KEY")
-# app.config("SQLALCHEMY_DATABASE_URI") = 'sqlite:///test.db'
-# app.config[
-#     "SQLALCHEMY_DATABASE_URI"
-# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-#     user=os.getenv("POSTGRES_USER"),
-#     passwd=os.getenv("POSTGRES_PASSWORD"),
-#     host=os.getenv("POSTGRES_HOST"),
-#     port=5432,
-#     table=os.getenv("POSTGRES_DB"),
-# )
-
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 # User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
