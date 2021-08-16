@@ -99,4 +99,5 @@ def deleteUserInfo(userId):
     delete = Destination.query.filter_by(id=userId).first()
     db.session.delete(delete)
 
+
 # TODO: add more routes that talks to front end to send back User object
