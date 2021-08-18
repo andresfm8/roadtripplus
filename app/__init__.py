@@ -17,7 +17,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -124,6 +124,13 @@ def addUser(userInfo):
     else:
         return
 
+# checks if the user has any trips present in db
+def checkTrips(userInfo):
+    email = userInfo["email"]
+    user = Person.query.first()
+    trips = user.trips
+    return trips;
+
 
 # updates userDestinations
 # TODO: test this route and make sure it updates based on user_id, add checks
@@ -184,6 +191,12 @@ def authorize():
     session["email"] = user_info["email"]
     session["name"] = user_info["name"]
     session["picture"] = user_info["picture"]
+
+    #checks if user has any trips stored
+    trips = checkTrips(user_info)
+    # if does then stores it into user_info dict
+    if trips is not None:
+        user_info["trips"] = trips
     return render_template("trips.html", user=user_info)
 
 
