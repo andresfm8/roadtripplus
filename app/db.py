@@ -1,33 +1,8 @@
-import os
-from flask import (
-    Flask,
-    redirect,
-    url_for,
-    session,
-    render_template,
-    send_from_directory,
-    request,
-)
-from datetime import timedelta
 from __init__ import db
 from dotenv import load_dotenv
 
 load_dotenv()
 
-
-# app.secret_key = os.getenv("APP_SECRET_KEY")
-# app.config("SQLALCHEMY_DATABASE_URI") = 'sqlite:///test.db'
-# app.config[
-#     "SQLALCHEMY_DATABASE_URI"
-# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-#     user=os.getenv("POSTGRES_USER"),
-#     passwd=os.getenv("POSTGRES_PASSWORD"),
-#     host=os.getenv("POSTGRES_HOST"),
-#     port=5432,
-#     table=os.getenv("POSTGRES_DB"),
-# )
-
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # User model
 class User(db.Model):
@@ -79,7 +54,11 @@ class Destination(db.Model):
         self.trip_id = trip_id
 
     def __repr__(self):
-        return f"Destinations('{self.order}', '{self.alias}', '{self.address}', '{self.daysToStay}', '{self.trip_id})"
+        return (
+            f"Destinations("
+            + "'{self.order}', '{self.alias}', '{self.address}', "
+            + "'{self.daysToStay}', '{self.trip_id}')"
+        )
 
 
 # stores user information into db
