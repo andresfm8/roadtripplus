@@ -17,7 +17,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+#app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -69,16 +69,16 @@ class Person(db.Model):
 # Trip Model
 class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=True)
-    person_id = db.Column(db.Integer, db.ForeignKey("person.id"))
+    name = db.Column(db.String())
+    person_id = db.Column(db.Integer, db.ForeignKey("person.id"), nullable=False)
     destination = db.relationship("Destination", backref="trip", lazy=True)
 
-    def __init__(self, name, user_id):
+    def __init__(self, name, person_id):
         self.name = name
-        self.user_id = user_id
+        self.person_id = person_id
 
     def __repr__(self):
-        return f"Trip('{self.name}', '{self.user_id}')"
+        return f"Trip('{self.name}', '{self.person_id}')"
 
 
 # Destination model
@@ -88,7 +88,7 @@ class Destination(db.Model):
     alias = db.Column(db.String())
     address = db.Column(db.String())
     daysToStay = db.Column(db.Integer)
-    trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"))
+    trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"), nullable=False)
 
     def __init__(self, order, address, alias, daysToStay, trip_id):
         self.order = order
@@ -109,16 +109,16 @@ class Destination(db.Model):
 def addUser(userInfo):
     email = userInfo["email"]
     name = userInfo["name"]
+    error = None
+    if not email:
+        error = "email is required."
     # Will only store email if email does not already exist in db
-    if Person.query.filter_by(email=email).first() is not None:
-        error = None
-        if not email:
-            error = "email is required."
+    if Person.query.filter_by(email=email).first() is None:
         if error is None:
-            new_user = Person(email, name)
+            new_user = Person(email = email, name = name)
             db.session.add(new_user)
             db.session.commit()
-            return f"User {email}, {name} created successfully"
+            print (f"User {email}, {name} created successfully")
         else:
             return error, 418 
     else:
@@ -127,10 +127,22 @@ def addUser(userInfo):
 # checks if the user has any trips present in db
 def checkTrips(userInfo):
     email = userInfo["email"]
-    user = Person.query.first()
+    user = Person.query.filter_by(email=email).first()
+    trip1 = Trip(name="NY", person_id=user.id)
+    trip2 = Trip(name="SF", person_id=user.id)
+    db.session.add(trip1)
+    db.session.add(trip2)
+    db.session.commit()
     trips = user.trips
-    return trips;
+    return trips
 
+# adds a trip into the db 
+def addTrip(tripInfo):
+    user = Person.query.filter_by(email=tripInfo["email"]).first()
+    newTrip = Trip(name=tripInfo["name"], person_id=user.id)
+    db.session.add(newTrip)
+    db.session.commit()
+    
 
 # updates userDestinations
 # TODO: test this route and make sure it updates based on user_id, add checks
@@ -140,7 +152,7 @@ def updateUserDestination(userId, userInfo):
     updateRow.address = userInfo["address"]
     updateRow.alias = userInfo["alias"]
     updateRow.daysToStay = userInfo["daysToStay"]
-    updateRow.user_id = userId
+    updateRow.person_id = userId
     db.session.add(updateRow)
     db.session.commit()
 
@@ -185,18 +197,20 @@ def authorize():
     resp = google.get("userinfo")  # userinfo contains stuff u specificed in the scrope
     user_info = resp.json()
     # store email into db
-    addUser(user_info)
+    added = addUser(user_info)
     # print(user_info)
     # stores the user email, name, and picture into session storage
     session["email"] = user_info["email"]
     session["name"] = user_info["name"]
     session["picture"] = user_info["picture"]
+    user_info["added"] = added
 
     #checks if user has any trips stored
+   
     trips = checkTrips(user_info)
+    print(trips)
     # if does then stores it into user_info dict
-    if trips is not None:
-        user_info["trips"] = trips
+    user_info["trips"] = trips
     return render_template("trips.html", user=user_info)
 
 

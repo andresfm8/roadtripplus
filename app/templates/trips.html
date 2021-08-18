@@ -19,13 +19,15 @@
       <img src="{{ user.picture }}" />
       <h1>Welcome {{ user.name }}, Your Road Trips</h1>
       <main class="grid">
+        {% for trip in user.trips %}
         <article>
           <img src="../static/img/road.jpg" alt="" />
           <div class="text">
-            <h3>road trip</h3>
+            <h3>{{ trip.name }}</h3>
             <button>see trip</button>
           </div>
         </article>
+        {% endfor %}
       </main>
     </div>
   </body>
