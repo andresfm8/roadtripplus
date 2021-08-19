@@ -1,6 +1,4 @@
 import os
-import json
-from dataclasses import dataclass
 from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
@@ -49,6 +47,7 @@ google = oauth.register(
     userinfo_endpoint="https://openidconnect.googleapis.com/v1/userinfo",
     client_kwargs={"scope": "openid email profile"},
 )
+
 
 # ----------------------------------------------------------------
 # db logic and helpers
