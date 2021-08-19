@@ -28,6 +28,7 @@ app.config[
     table=os.getenv("POSTGRES_DB"),
 )
 
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -229,14 +230,13 @@ def getDestinations(trip_id):
         )
     return str
 
+
 # api route that creates a new trip and routes to trip page
 @app.route("/api/create_trip/<trip_name>")
 def createTrip(trip_name):
     email = session["email"]
     addTrip(email, trip_name)
     return redirect("/planner")
-
-
 
 
 @app.before_first_request
