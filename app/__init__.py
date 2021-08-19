@@ -48,6 +48,7 @@ google = oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
+
 # ----------------------------------------------------------------
 # db logic and helpers
 # User model
