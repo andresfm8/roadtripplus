@@ -1,4 +1,6 @@
 import os
+import json
+from dataclasses import dataclass
 from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
@@ -85,23 +87,17 @@ class Trip(db.Model):
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer)
-    alias = db.Column(db.String())
     address = db.Column(db.String())
-    daysToStay = db.Column(db.Integer)
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"), nullable=False)
 
-    def __init__(self, order, address, alias, daysToStay, trip_id):
+    def __init__(self, order, address, trip_id):
         self.order = order
         self.address = address
-        self.alias = alias
-        self.daysToStay = daysToStay
         self.trip_id = trip_id
 
     def __repr__(self):
         return (
-            f"Destinations("
-            + "'{self.order}', '{self.alias}', '{self.address}', "
-            + "'{self.daysToStay}', '{self.trip_id}')"
+            f"Destinations('{self.order}', '{self.address}','{self.trip_id}')"
         )
 
 
@@ -128,10 +124,15 @@ def addUser(userInfo):
 def checkTrips(userInfo):
     email = userInfo["email"]
     user = Person.query.filter_by(email=email).first()
+    # Populating with dummy data
     trip1 = Trip(name="NY", person_id=user.id)
-    trip2 = Trip(name="SF", person_id=user.id)
+    #trip2 = Trip(name="SF", person_id=user.id)
     db.session.add(trip1)
-    db.session.add(trip2)
+    #db.session.add(trip2)
+    db.session.commit()
+    trip = Trip.query.first()
+    dest1 = Destination(order="1",address="123 Test Ave",trip_id=trip.id)
+    db.session.add(dest1)
     db.session.commit()
     trips = user.trips
     return trips
@@ -145,7 +146,6 @@ def addTrip(tripInfo):
     
 
 # updates userDestinations
-# TODO: test this route and make sure it updates based on user_id, add checks
 def updateUserDestination(userId, userInfo):
     updateRow = Person.query.filter_by(id=userId).first()
     updateRow.order = userInfo["order"]
@@ -161,11 +161,6 @@ def updateUserDestination(userId, userInfo):
 def deleteUserInfo(userId):
     delete = Destination.query.filter_by(id=userId).first()
     db.session.delete(delete)
-
-
-# TODO: add more routes that talks to front end to send back User object
-
-
 
 @app.route("/")
 def landing_page():
@@ -208,7 +203,6 @@ def authorize():
     #checks if user has any trips stored
    
     trips = checkTrips(user_info)
-    print(trips)
     # if does then stores it into user_info dict
     user_info["trips"] = trips
     return render_template("trips.html", user=user_info)
@@ -220,10 +214,21 @@ def logout():
         session.pop(key)
     return redirect("/")
 
+# api route that returns destinations by trip_id
+@app.route("/api/<trip_id>/destinations")
+def getDestinations(trip_id):
+    trip = Trip.query.filter_by(person_id=trip_id).first()
+    destination = trip.destination
+    str =  ''
+    # TODO: convert to json
+    for value in destination:
+         str +=  f'order: {value.order}\naddress: {value.address}, trip_id: {value.trip_id} '
+    return str
+
 @app.before_first_request
 def before_req_func():
-    db.drop_all()
-    db.create_all()
+    # db.drop_all()
+     db.create_all()
 
 
 if __name__ == "__main__":
