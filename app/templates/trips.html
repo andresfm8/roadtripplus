@@ -16,8 +16,11 @@
 
   <body>
     <div class="container">
-      <img src="{{ user.picture }}" />
+		<img id="profile" src="{{ user.picture }}" />
       <h1>Welcome {{ user.name }}, Your Road Trips</h1>
+	  <div class="create">
+		  <button id="createbtn">create trip</button>
+	  </div>
       <main class="grid">
         {% for trip in user.trips %}
         <article>
@@ -30,5 +33,22 @@
         {% endfor %}
       </main>
     </div>
+	<div class="popup">
+		<div class="popup-content">
+		  <img src="https://img.icons8.com/ios/50/000000/cancel.png" alt="Close" class="close">
+		  <label>Trip Name:</label><br>
+		  <input type="triptext" placeholder="Enter Name">
+		  <a href="#" class="savebtn">save</a>
+		</div>
+	</div>
+	<script>
+		document.getElementById("createbtn").addEventListener("click", function () {
+		  document.querySelector(".popup").style.display = "flex";
+		})
+	
+		document.querySelector(".close").addEventListener("click", function () {
+		  document.querySelector(".popup").style.display = "none";
+		})
+	</script>
   </body>
 </html>
