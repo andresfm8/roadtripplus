@@ -18,15 +18,15 @@ app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
-# app.config[
-#     "SQLALCHEMY_DATABASE_URI"
-# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-#     user=os.getenv("POSTGRES_USER"),
-#     passwd=os.getenv("POSTGRES_PASSWORD"),
-#     host=os.getenv("POSTGRES_HOST"),
-#     port=5432,
-#     table=os.getenv("POSTGRES_DB"),
-# )
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
+    user=os.getenv("POSTGRES_USER"),
+    passwd=os.getenv("POSTGRES_PASSWORD"),
+    host=os.getenv("POSTGRES_HOST"),
+    port=5432,
+    table=os.getenv("POSTGRES_DB"),
+)
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -233,7 +233,7 @@ def getDestinations(trip_id):
 @app.route("/api/create_trip/<trip_name>")
 def createTrip(trip_name):
     email = session["email"]
-    newTrip = Trip(email, trip_name)
+    addTrip(email, trip_name)
     return redirect("/planner")
 
 
