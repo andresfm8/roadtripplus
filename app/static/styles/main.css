@@ -37,6 +37,23 @@ li button:hover {
   background-color: #f9cd5d;
 }
 
+li a {
+  display: inline-block;
+  font-family: "Red Rose";
+  color: black;
+  border: none;
+  background-color: #f7c230;
+  text-align: center;
+  font-size: medium;
+  padding: 14px 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+li a:hover {
+  background-color: #f9cd5d;
+}
+
 h1 {
   font-style: normal;
   font-weight: normal;
@@ -83,25 +100,6 @@ input[type="text"] {
   content: "";
   display: table;
   clear: both;
-}
-
-.plusbtn {
-  background-color: rgb(255, 255, 255);
-  border-radius: 50%;
-  border: none;
-  padding: 30px;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  display: flex;
-  font-size: 40px;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 60px;
-  margin-bottom: 30px;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
 }
 
 .savebtn {
