@@ -17,7 +17,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 # app.config[
 #     "SQLALCHEMY_DATABASE_URI"
 # ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -229,14 +229,13 @@ def getDestinations(trip_id):
         )
     return str
 
+
 # api route that creates a new trip and routes to trip page
 @app.route("/api/create_trip/<trip_name>")
 def createTrip(trip_name):
     email = session["email"]
     newTrip = Trip(email, trip_name)
     return redirect("/planner")
-
-
 
 
 @app.before_first_request
