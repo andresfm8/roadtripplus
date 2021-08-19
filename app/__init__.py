@@ -19,7 +19,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-#app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -50,7 +50,7 @@ google = oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 # db logic and helpers
 # User model
 class Person(db.Model):
@@ -96,9 +96,7 @@ class Destination(db.Model):
         self.trip_id = trip_id
 
     def __repr__(self):
-        return (
-            f"Destinations('{self.order}', '{self.address}','{self.trip_id}')"
-        )
+        return f"Destinations('{self.order}', '{self.address}','{self.trip_id}')"
 
 
 # stores user information into db
@@ -111,14 +109,15 @@ def addUser(userInfo):
     # Will only store email if email does not already exist in db
     if Person.query.filter_by(email=email).first() is None:
         if error is None:
-            new_user = Person(email = email, name = name)
+            new_user = Person(email=email, name=name)
             db.session.add(new_user)
             db.session.commit()
-            print (f"User {email}, {name} created successfully")
+            print(f"User {email}, {name} created successfully")
         else:
-            return error, 418 
+            return error, 418
     else:
         return
+
 
 # checks if the user has any trips present in db
 def checkTrips(userInfo):
@@ -126,24 +125,25 @@ def checkTrips(userInfo):
     user = Person.query.filter_by(email=email).first()
     # Populating with dummy data
     trip1 = Trip(name="NY", person_id=user.id)
-    #trip2 = Trip(name="SF", person_id=user.id)
+    # trip2 = Trip(name="SF", person_id=user.id)
     db.session.add(trip1)
-    #db.session.add(trip2)
+    # db.session.add(trip2)
     db.session.commit()
     trip = Trip.query.first()
-    dest1 = Destination(order="1",address="123 Test Ave",trip_id=trip.id)
+    dest1 = Destination(order="1", address="123 Test Ave", trip_id=trip.id)
     db.session.add(dest1)
     db.session.commit()
     trips = user.trips
     return trips
 
-# adds a trip into the db 
+
+# adds a trip into the db
 def addTrip(tripInfo):
     user = Person.query.filter_by(email=tripInfo["email"]).first()
     newTrip = Trip(name=tripInfo["name"], person_id=user.id)
     db.session.add(newTrip)
     db.session.commit()
-    
+
 
 # updates userDestinations
 def updateUserDestination(userId, userInfo):
@@ -162,12 +162,14 @@ def deleteUserInfo(userId):
     delete = Destination.query.filter_by(id=userId).first()
     db.session.delete(delete)
 
+
 @app.route("/")
 def landing_page():
     return render_template("landing.html")
 
+
 @app.route("/trips")
-def trips_page():  
+def trips_page():
     return render_template("trips.html")
 
 
@@ -188,7 +190,7 @@ def authorize():
     google = oauth.create_client("google")  # create the google oauth client
     token = (
         google.authorize_access_token()
-     )  # Access token from google (needed to get user info)
+    )  # Access token from google (needed to get user info)
     resp = google.get("userinfo")  # userinfo contains stuff u specificed in the scrope
     user_info = resp.json()
     # store email into db
@@ -200,8 +202,8 @@ def authorize():
     session["picture"] = user_info["picture"]
     user_info["added"] = added
 
-    #checks if user has any trips stored
-   
+    # checks if user has any trips stored
+
     trips = checkTrips(user_info)
     # if does then stores it into user_info dict
     user_info["trips"] = trips
@@ -214,21 +216,25 @@ def logout():
         session.pop(key)
     return redirect("/")
 
+
 # api route that returns destinations by trip_id
 @app.route("/api/<trip_id>/destinations")
 def getDestinations(trip_id):
     trip = Trip.query.filter_by(person_id=trip_id).first()
     destination = trip.destination
-    str =  ''
+    str = ""
     # TODO: convert to json
     for value in destination:
-         str +=  f'order: {value.order}\naddress: {value.address}, trip_id: {value.trip_id} '
+        str += (
+            f"order: {value.order}\naddress: {value.address}, trip_id: {value.trip_id} "
+        )
     return str
+
 
 @app.before_first_request
 def before_req_func():
     # db.drop_all()
-     db.create_all()
+    db.create_all()
 
 
 if __name__ == "__main__":
