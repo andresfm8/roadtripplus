@@ -17,16 +17,16 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-    user=os.getenv("POSTGRES_USER"),
-    passwd=os.getenv("POSTGRES_PASSWORD"),
-    host=os.getenv("POSTGRES_HOST"),
-    port=5432,
-    table=os.getenv("POSTGRES_DB"),
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+# app.config[
+#     "SQLALCHEMY_DATABASE_URI"
+# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
+#     user=os.getenv("POSTGRES_USER"),
+#     passwd=os.getenv("POSTGRES_PASSWORD"),
+#     host=os.getenv("POSTGRES_HOST"),
+#     port=5432,
+#     table=os.getenv("POSTGRES_DB"),
+# )
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -137,9 +137,9 @@ def checkTrips(userInfo):
 
 
 # adds a trip into the db
-def addTrip(tripInfo):
-    user = Person.query.filter_by(email=tripInfo["email"]).first()
-    newTrip = Trip(name=tripInfo["name"], person_id=user.id)
+def addTrip(email, trip_name):
+    user = Person.query.filter_by(email=email).first()
+    newTrip = Trip(trip_name, person_id=user.id)
     db.session.add(newTrip)
     db.session.commit()
 
@@ -225,9 +225,18 @@ def getDestinations(trip_id):
     # TODO: convert to json
     for value in destination:
         str += (
-            f"order: {value.order}\naddress: {value.address}, trip_id: {value.trip_id} "
+            f"order: {value.order} address: {value.address}, trip_id: {value.trip_id} "
         )
     return str
+
+# api route that creates a new trip and routes to trip page
+@app.route("/api/create_trip/<trip_name>")
+def createTrip(trip_name):
+    email = session["email"]
+    newTrip = Trip(email, trip_name)
+    return redirect("/planner")
+
+
 
 
 @app.before_first_request
