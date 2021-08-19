@@ -1,6 +1,4 @@
 import os
-import json
-from dataclasses import dataclass
 from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
@@ -19,7 +17,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
 # PostgresSQL congig
-#app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -50,7 +48,7 @@ google = oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 # db logic and helpers
 # User model
 class Person(db.Model):
