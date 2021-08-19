@@ -1,5 +1,4 @@
 import os
-from dataclasses import dataclass
 from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
