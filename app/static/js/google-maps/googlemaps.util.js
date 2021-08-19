@@ -2,10 +2,19 @@
  * Button to set current location as origin
  * Generate list of destinations
  * Remove + button
+ * Create array and push each marker to it
+ * Assign an id or some identifier to each marker and 
+ * If the marker is moved then updated the value
+ * If the marker is removed then update the order and remove from markerlist?
+ * How to get markers of directions
+ * IDEA: SAVE EACH WAYPOINT AS WELL AS ORIGIN AND DESTINATION
+ * WHEN? ANYTHING CHANGES, THEN LOOK FOR THE ONE THAT JUST CHANGED (WITH THE TRACKER probs a hashmap)
+ * THEN UPDATE AND SET DIRECTIONS AGAIN -> Basically will have to re-render directions, sucks but depends on gmaps api
 */
 
+//Key: Order, Value: Coordinates
+const destinationsMap = new Map();
 let map, infoWindow, initialMarker;
-let destinations = [];
 
 function initMap() {
   let options = {
@@ -41,20 +50,19 @@ function initMap() {
   });
 
   map.addListener("click", (mapsMouseEvent) => {
-    destinations.push({ location: mapsMouseEvent.latLng });
+    addElementToMap(mapsMouseEvent.latLng);
     toggleMarker(mapsMouseEvent.latLng, map);
     displayRoute(directionsService, directionsRenderer);
   });
 
   autocomplete(map, directionsService, directionsRenderer);
 }
-
+//Disable the default markers (keep the directions markers)
 function toggleMarker(latLng, map) {
-  if (destinations.length < 2)
+  if (destinationsMap.size < 2)
     placeMarker(latLng, map);
-  else if (destinations.length == 2) {
+  else if (destinationsMap.size == 2)
     initialMarker.setMap(null);
-  }
 }
 
 function initLocationButton(map) {
@@ -101,16 +109,20 @@ function moveToCurrentLocation(infoWindow) {
 function displayRoute(service, display) {
   let waypoints = [];
   //Create list of stops without origin and destination
-  if (destinations.length > 2) {
-    for (let i = 1; i < destinations.length - 1; i++)
-      waypoints.push(destinations[i]);
+  let counter = 1;
+  if (destinationsMap.size > 2) {
+    for (const [key, value] of destinationsMap.entries()) {
+      if (counter != 1 && counter != destinationsMap.size)
+        waypoints.push(value)
+      counter++;
+    }
   }
-  if (destinations.length > 1) {
+
+  if (destinationsMap.size > 1) {
     service
       .route({
-        //ORIGIN will be first item in the list, DESTINATION will be last
-        origin: destinations[0].location,
-        destination: destinations.length > 1 ? destinations[destinations.length - 1].location : undefined,
+        origin: getFirstValue().location,
+        destination: destinationsMap.size > 1 ? getLastValue().location : undefined,
         waypoints: waypoints ? [...waypoints] : undefined,
         travelMode: google.maps.TravelMode.DRIVING,
         avoidTolls: true,
@@ -153,6 +165,10 @@ function placeMarker(latLng, map) {
     infoWindow.open(map, marker);
   });
   // map.panTo(latLng);
+  google.maps.event.addListener(marker, "drag", function (event) {
+    console.log("drag");
+  });
+
 }
 
 /*
@@ -201,13 +217,10 @@ function autocomplete(map, service, display) {
         console.log("Returned place contains no geometry");
         return;
       }
-      console.log(place.geometry.location);
-      //ADD TO destinations?
-      destinations.push({ location: place.geometry.location });
+
+      addElementToMap(place.geometry.location);
       toggleMarker(place.geometry.location, map);
       displayRoute(service, display);
-      // Create a marker for each place.
-      // placeMarker(place.geometry.location, map, place.name);
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
@@ -232,3 +245,26 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   );
   infoWindow.open(map);
 }
+
+/*
+  Add HTML content
+*/
+function updateList(key, value) {
+  let node = document.createElement("LI");
+  let textnode = document.createTextNode(`${key}, ${value.location}`);// do reverse geocoding
+  node.appendChild(textnode);
+  document.getElementById("destinations-list").appendChild(node);
+}
+
+//destinationMaps util functions
+function addElementToMap(coordinates) {
+  if (destinationsMap.size == 0)
+    destinationsMap.set(1, { location: coordinates });
+  else {
+    destinationsMap.set(getLastKey() + 1, { location: coordinates })
+  }
+  updateList(getLastKey(), getLastValue());
+}
+const getLastKey = () => Array.from(destinationsMap.keys()).pop();
+const getFirstValue = () => destinationsMap.values().next().value;
+const getLastValue = () => [...destinationsMap][destinationsMap.size - 1][1];

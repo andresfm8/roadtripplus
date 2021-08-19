@@ -33,6 +33,9 @@
           <label for="adest">A Destination:</label><br>
           <input id="pac-input" class="controls" type="text" placeholder="Search Box" />
         </form>
+        <div>
+          <ul id="destinations-list"></ul>
+        </div>
         <div class="w3-container">
           <button onclick="addDestination('location')" class="plusbtn">+</button>
         </div>
@@ -62,11 +65,11 @@
   </div>
 
   <script>
-    document.getElementById("savebtn").addEventListener("click", function(){
+    document.getElementById("savebtn").addEventListener("click", function () {
       document.querySelector(".popup").style.display = "flex";
     })
 
-    document.querySelector(".close").addEventListener("click", function(){
+    document.querySelector(".close").addEventListener("click", function () {
       document.querySelector(".popup").style.display = "none";
     })
   </script>
