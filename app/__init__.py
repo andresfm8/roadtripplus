@@ -1,5 +1,4 @@
 import os
-import json
 from dataclasses import dataclass
 from flask import Flask, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
