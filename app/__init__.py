@@ -204,7 +204,7 @@ def trips_page():
 @app.route("/planner/<trip_id>")
 def planner_page(trip_id):
     # TODO pull up destinations here
-    #destinations = getDest(trip_id)
+    # destinations = getDest(trip_id)
     session["trip_id"] = trip_id
     return render_template("planner.html")
 
@@ -249,7 +249,6 @@ def getDest(trip_id):
     destDic = {}
 
 
-
 # api route that creates a new trip and routes to trip page
 @app.route("/api/create_trip/<trip_name>")
 def createTrip(trip_name):
@@ -263,16 +262,15 @@ def createDestinations(trip_id):
     # if get send data, if post save data
     if request.method == "POST":
         json_data = request.data
-        #print(json_data)
+        # print(json_data)
         json_list = json.loads(json_data)
         for p in json_list:
-            order = (p['order'])
-            place_id = (p['location_data']['place_id'])
-            area_name = (p['location_data']['area_name'])
-            lat = (p['location_data']['coordinate']['location']['lat'])
-            lng = (p['location_data']['coordinate']['location']['lng'])
-            addDest(order,place_id,area_name,lat,lng)
-           
+            order = p["order"]
+            place_id = p["location_data"]["place_id"]
+            area_name = p["location_data"]["area_name"]
+            lat = p["location_data"]["coordinate"]["location"]["lat"]
+            lng = p["location_data"]["coordinate"]["location"]["lng"]
+            addDest(order, place_id, area_name, lat, lng)
 
     # json_data contains an arry of destinations
     # addDest(order, dest_id, trip_id)
