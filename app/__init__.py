@@ -28,6 +28,7 @@ app.config[
     table=os.getenv("POSTGRES_DB"),
 )
 
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -137,9 +138,9 @@ def checkTrips(userInfo):
 
 
 # adds a trip into the db
-def addTrip(tripInfo):
-    user = Person.query.filter_by(email=tripInfo["email"]).first()
-    newTrip = Trip(name=tripInfo["name"], person_id=user.id)
+def addTrip(email, trip_name):
+    user = Person.query.filter_by(email=email).first()
+    newTrip = Trip(trip_name, person_id=user.id)
     db.session.add(newTrip)
     db.session.commit()
 
@@ -225,9 +226,17 @@ def getDestinations(trip_id):
     # TODO: convert to json
     for value in destination:
         str += (
-            f"order: {value.order}\naddress: {value.address}, trip_id: {value.trip_id} "
+            f"order: {value.order} address: {value.address}, trip_id: {value.trip_id} "
         )
     return str
+
+
+# api route that creates a new trip and routes to trip page
+@app.route("/api/create_trip/<trip_name>")
+def createTrip(trip_name):
+    email = session["email"]
+    addTrip(email, trip_name)
+    return redirect("/planner")
 
 
 @app.before_first_request
