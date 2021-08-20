@@ -1,5 +1,6 @@
 import os
 import json
+
 # from sys import last_traceback
 # from typing_extensions import OrderedDict
 from flask import Flask, request, redirect, url_for, session, render_template
@@ -200,7 +201,7 @@ def trips_page():
 @app.route("/planner/<trip_id>")
 def planner_page(trip_id):
     # TODO pull up destinations here
-    #destinations = getDest(trip_id)
+    # destinations = getDest(trip_id)
     return render_template("planner.html")
 
 
@@ -264,16 +265,15 @@ def createDestination(trip_id):
     # if get send data, if post save data
     if request.method == "POST":
         json_data = request.data
-        #print(json_data)
+        # print(json_data)
         json_list = json.loads(json_data)
         for p in json_list:
-            order = (p['order'])
-            place_id = (p['location_data']['place_id'])
-            area_name = (p['location_data']['area_name'])
-            lat = (p['location_data']['coordinate']['location']['lat'])
-            lng = (p['location_data']['coordinate']['location']['lng'])
-            addDest(order,place_id,area_name,lat,lng, trip_id)
-           
+            order = p["order"]
+            place_id = p["location_data"]["place_id"]
+            area_name = p["location_data"]["area_name"]
+            lat = p["location_data"]["coordinate"]["location"]["lat"]
+            lng = p["location_data"]["coordinate"]["location"]["lng"]
+            addDest(order, place_id, area_name, lat, lng, trip_id)
 
     # json_data contains an arry of destinations
     # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
