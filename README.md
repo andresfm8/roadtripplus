@@ -10,6 +10,7 @@ This is a road trip planner website allowing you to create a trip by adding dest
 - [Setup](#setup)
   * [Installation](#installation)
   * [Usage](#usage)
+- [Deployment on AWS](#deployment)
 - [Features](#features)
 - [Technologies](#technologies)
 
@@ -44,6 +45,9 @@ Start flask development server
 $ export FLASK_ENV=development
 $ flask run
 ```
+# :rocket:Deployment on AWS
+![aws instance](https://user-images.githubusercontent.com/73494041/130258333-d9f74283-d158-4cab-9194-8f07d3ed9bb8.PNG)
+
 
 # :world_map:Features
 
