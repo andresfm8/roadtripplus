@@ -1,16 +1,16 @@
-/** TODO: 
+/** TODO:
  * Button to set current location as origin
  * Generate list of destinations
  * Remove + button
  * Create array and push each marker to it
- * Assign an id or some identifier to each marker and 
+ * Assign an id or some identifier to each marker and
  * If the marker is moved then updated the value
  * If the marker is removed then update the order and remove from markerlist?
  * How to get markers of directions
  * IDEA: SAVE EACH WAYPOINT AS WELL AS ORIGIN AND DESTINATION
  * WHEN? ANYTHING CHANGES, THEN LOOK FOR THE ONE THAT JUST CHANGED (WITH THE TRACKER probs a hashmap)
  * THEN UPDATE AND SET DIRECTIONS AGAIN -> Basically will have to re-render directions, sucks but depends on gmaps api
-*/
+ */
 
 //Key: Order, Value: Coordinates
 const destinationsMap = new Map();
@@ -20,12 +20,12 @@ function initMap() {
   let options = {
     // TO DO: Set the location to be your location if user allows location usage
     // Else set a random location?
-    center: { lat: 25.34, lng: 137.80 },
+    center: { lat: 25.34, lng: 137.8 },
     zoom: 2.5,
     disableDefaultUI: true,
     zoomControl: true,
-    mapTypeId: "roadmap"
-  }
+    mapTypeId: "roadmap",
+  };
 
   map = new google.maps.Map(document.getElementById("map"), options);
 
@@ -59,10 +59,8 @@ function initMap() {
 }
 //Disable the default markers (keep the directions markers)
 function toggleMarker(latLng, map) {
-  if (destinationsMap.size < 2)
-    placeMarker(latLng, map);
-  else if (destinationsMap.size == 2)
-    initialMarker.setMap(null);
+  if (destinationsMap.size < 2) placeMarker(latLng, map);
+  else if (destinationsMap.size == 2) initialMarker.setMap(null);
 }
 
 function initLocationButton(map) {
@@ -113,7 +111,7 @@ function displayRoute(service, display) {
   if (destinationsMap.size > 2) {
     for (const [key, value] of destinationsMap.entries()) {
       if (counter != 1 && counter != destinationsMap.size)
-        waypoints.push(value)
+        waypoints.push(value);
       counter++;
     }
   }
@@ -122,7 +120,8 @@ function displayRoute(service, display) {
     service
       .route({
         origin: getFirstValue().location,
-        destination: destinationsMap.size > 1 ? getLastValue().location : undefined,
+        destination:
+          destinationsMap.size > 1 ? getLastValue().location : undefined,
         waypoints: waypoints ? [...waypoints] : undefined,
         travelMode: google.maps.TravelMode.DRIVING,
         avoidTolls: true,
@@ -140,16 +139,17 @@ function displayRoute(service, display) {
   Add a marker on the map
 */
 function placeMarker(latLng, map) {
-
-  let content;//content = function
+  let content; //content = function
   //CREATE FUNCTION THAT REQUEST DATA FROM GEOCODING API move to function
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat()},${latLng.lng()}&key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0`)
-    .then(res => res.json())
-    .then(data => {
+  fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat()},${latLng.lng()}&key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0`
+  )
+    .then((res) => res.json())
+    .then((data) => {
       if (data.results.length) content = data.results[0].formatted_address;
       else content = latLng.lat() + ", " + latLng.lng();
     })
-    .catch(e => console.log("invalid address"))
+    .catch((e) => console.log("invalid address"));
   let marker = new google.maps.Marker({
     position: latLng,
     map: map,
@@ -168,7 +168,6 @@ function placeMarker(latLng, map) {
   google.maps.event.addListener(marker, "drag", function (event) {
     console.log("drag");
   });
-
 }
 
 /*
@@ -251,7 +250,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 */
 function updateList(key, value) {
   let node = document.createElement("LI");
-  let textnode = document.createTextNode(`${key}, ${value.location}`);// do reverse geocoding
+  let textnode = document.createTextNode(`${key}, ${value.location}`); // do reverse geocoding
   node.appendChild(textnode);
   document.getElementById("destinations-list").appendChild(node);
 }
@@ -261,7 +260,7 @@ function addElementToMap(coordinates) {
   if (destinationsMap.size == 0)
     destinationsMap.set(1, { location: coordinates });
   else {
-    destinationsMap.set(getLastKey() + 1, { location: coordinates })
+    destinationsMap.set(getLastKey() + 1, { location: coordinates });
   }
   updateList(getLastKey(), getLastValue());
 }

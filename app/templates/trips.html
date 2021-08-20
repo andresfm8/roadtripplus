@@ -27,7 +27,9 @@
           <img src="../static/img/road.jpg" alt="" />
           <div class="text">
             <h3>{{ trip.name }}</h3>
-            <button id="trip">see trip</button>
+            <form action="/planner/{{ trip.id }}">
+              <button class="trip">see trip</button>
+            </form>
           </div>
         </article>
         {% endfor %}
@@ -61,11 +63,6 @@
 
       document.querySelector(".close").addEventListener("click", function () {
         document.querySelector(".popup").style.display = "none";
-      });
-
-      //WHY ISNT THIS WORKING?!?!?!
-      document.getElementById("trip").addEventListener("click", function () {
-        document.querySelector(".popup").style.display = "flex";
       });
     </script>
   </body>

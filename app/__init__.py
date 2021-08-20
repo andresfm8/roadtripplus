@@ -17,16 +17,16 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10)
 # PostgresSQL congig
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-    user=os.getenv("POSTGRES_USER"),
-    passwd=os.getenv("POSTGRES_PASSWORD"),
-    host=os.getenv("POSTGRES_HOST"),
-    port=5432,
-    table=os.getenv("POSTGRES_DB"),
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+# app.config[
+#     "SQLALCHEMY_DATABASE_URI"
+# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
+#     user=os.getenv("POSTGRES_USER"),
+#     passwd=os.getenv("POSTGRES_PASSWORD"),
+#     host=os.getenv("POSTGRES_HOST"),
+#     port=5432,
+#     table=os.getenv("POSTGRES_DB"),
+# )
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -181,10 +181,11 @@ def trips_page():
     return render_template("trips.html", user=user)
 
 
-@app.route("/planner")
-def planner_page():
+@app.route("/planner/<trip_id>")
+def planner_page(trip_id):
     # TODO pull up destinations here
-    return render_template("planner.html")
+    destinations = {}
+    return render_template("planner.html", destinations=destinations)
 
 
 @app.route("/login")
