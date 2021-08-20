@@ -68,12 +68,14 @@ function fetchDestinations() {
 }
 
 function saveDestinations() {
-  fetch("localhost:5000", {
-    method: "POST",
-    body: JSON.stringify(destinationsMap)
-  }).then(res => {
-    console.log("Request complete! response:", res);
-  });
+  if (destinationsMap.size > 0) {
+    fetch("localhost:5000", {
+      method: "POST",
+      body: JSON.stringify(destinationsMap)
+    }).then(res => {
+      console.log("Request complete! response:", res);
+    });
+  }
 }
 
 /*
