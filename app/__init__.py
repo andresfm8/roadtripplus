@@ -15,7 +15,7 @@ app = Flask(__name__)
 # Session config
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10)
 # PostgresSQL congig
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
 # app.config[
@@ -87,16 +87,16 @@ class Trip(db.Model):
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer)
-    address = db.Column(db.String())
+    dest_id = db.Column(db.String())
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"), nullable=False)
 
-    def __init__(self, order, address, trip_id):
+    def __init__(self, order, dest_id):
         self.order = order
-        self.address = address
+        self.dest_id = dest_id
         self.trip_id = trip_id
 
     def __repr__(self):
-        return f"Destinations('{self.order}', '{self.address}','{self.trip_id}')"
+        return f"Destinations('{self.order}', '{self.dest_id}','{self.trip_id}')"
 
 
 # stores user information into db
@@ -119,20 +119,35 @@ def addUser(userInfo):
         return
 
 
+# returns the user object
+def getUser():
+    user = {}
+    user["email"] = session["email"]
+    user["name"] = session["name"]
+    user["picture"] = session["picture"]
+    return user
+
+
+def addDest(order, dest_id, trip_id):
+    newDest = Destination(order=order, dest_id=dest_id, trip_id=trip_id)
+    db.session.add(newDest)
+    db.session.commit()
+
+
 # checks if the user has any trips present in db
 def checkTrips(userInfo):
     email = userInfo["email"]
     user = Person.query.filter_by(email=email).first()
     # Populating with dummy data
-    trip1 = Trip(name="NY", person_id=user.id)
+    # trip1 = Trip(name="NY", person_id=user.id)
     # trip2 = Trip(name="SF", person_id=user.id)
-    db.session.add(trip1)
+    # db.session.add(trip1)
     # db.session.add(trip2)
-    db.session.commit()
-    trip = Trip.query.first()
-    dest1 = Destination(order="1", address="123 Test Ave", trip_id=trip.id)
-    db.session.add(dest1)
-    db.session.commit()
+    # db.session.commit()
+    # trip = Trip.query.first()
+    # dest1 = Destination(order="1", address="123 Test Ave", trip_id=trip.id)
+    # db.session.add(dest1)
+    # db.session.commit()
     trips = user.trips
     return trips
 
@@ -142,18 +157,6 @@ def addTrip(email, trip_name):
     user = Person.query.filter_by(email=email).first()
     newTrip = Trip(trip_name, person_id=user.id)
     db.session.add(newTrip)
-    db.session.commit()
-
-
-# updates userDestinations
-def updateUserDestination(userId, userInfo):
-    updateRow = Person.query.filter_by(id=userId).first()
-    updateRow.order = userInfo["order"]
-    updateRow.address = userInfo["address"]
-    updateRow.alias = userInfo["alias"]
-    updateRow.daysToStay = userInfo["daysToStay"]
-    updateRow.person_id = userId
-    db.session.add(updateRow)
     db.session.commit()
 
 
@@ -170,11 +173,17 @@ def landing_page():
 
 @app.route("/trips")
 def trips_page():
-    return render_template("trips.html")
+    user = getUser()
+    # checks if user has any trips stored
+    trips = checkTrips(user)
+    # if does then stores it into user_info dict
+    user["trips"] = trips
+    return render_template("trips.html", user=user)
 
 
 @app.route("/planner")
 def planner_page():
+    # TODO pull up destinations here
     return render_template("planner.html")
 
 
@@ -201,13 +210,7 @@ def authorize():
     session["name"] = user_info["name"]
     session["picture"] = user_info["picture"]
     user_info["added"] = added
-
-    # checks if user has any trips stored
-
-    trips = checkTrips(user_info)
-    # if does then stores it into user_info dict
-    user_info["trips"] = trips
-    return render_template("trips.html", user=user_info)
+    return redirect("/trips")
 
 
 @app.route("/logout")
@@ -226,7 +229,7 @@ def getDestinations(trip_id):
     # TODO: convert to json
     for value in destination:
         str += (
-            f"order: {value.order} address: {value.address}, trip_id: {value.trip_id} "
+            f"order: {value.order} dest_id: {value.dest_id}, trip_id: {value.trip_id} "
         )
     return str
 
@@ -236,6 +239,12 @@ def getDestinations(trip_id):
 def createTrip(trip_name):
     email = session["email"]
     addTrip(email, trip_name)
+    return redirect("/login")
+
+
+@app.route("/api/create_destination/<order>/<dest_id>/<trip_id>")
+def createDestination(order, dest_id, trip_id):
+    addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
 
