@@ -27,7 +27,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 #     host=os.getenv("POSTGRES_HOST"),
 #     port=5432,
 #     table=os.getenv("POSTGRES_DB"),
-#)
+# )
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -136,7 +136,14 @@ def getUser():
 
 
 def addDest(order, dest_id, trip_id):
-    newDest = Destination(order=order, place_id=place_id, area_name=area_name,lat=lat, lng=lng, trip_id=trip_id)
+    newDest = Destination(
+        order=order,
+        place_id=place_id,
+        area_name=area_name,
+        lat=lat,
+        lng=lng,
+        trip_id=trip_id,
+    )
     db.session.add(newDest)
     db.session.commit()
 
@@ -191,7 +198,7 @@ def trips_page():
 @app.route("/planner/<trip_id>")
 def planner_page(trip_id):
     # TODO pull up destinations here
-    #destinations = getDest(trip_id)
+    # destinations = getDest(trip_id)
     return render_template("planner.html")
 
 
@@ -227,13 +234,12 @@ def logout():
         session.pop(key)
     return redirect("/")
 
+
 # api route that returns destinations by trip_id
 def getDest(trip_id):
     trip = Trip.query.filter_by(person_id=trip_id).first()
     destination = trip.destination
     destDic = {}
-
-
 
     return str
 
@@ -246,16 +252,16 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/destination/<trip_id>", methods=['POST', 'GET'])
+@app.route("/api/destination/<trip_id>", methods=["POST", "GET"])
 def createDestinations(trip_id):
     # if get send data, if post save data
-    if request.method == 'POST':
+    if request.method == "POST":
         json_data = request.data
         print(json_data)
         for i in range(len(json_data)):
             print(json_data[i]["order"])
     # json_data contains an arry of destinations
-        #addDest(order, dest_id, trip_id)
+    # addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
 
