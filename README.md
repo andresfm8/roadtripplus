@@ -4,16 +4,6 @@ This is a road trip planner website allowing you to create a trip by adding dest
 
 :round_pushpin:Check it out: domain here
 
-## Table of Contents
-
-- [Motivation](#motivation)
-- [Setup](#setup)
-  * [Installation](#installation)
-  * [Usage](#usage)
-- [Deployment on AWS](#deployment)
-- [Features](#features)
-- [Technologies](#technologies)
-
 # :motorway:Motivation
 
 We were interested in creating an organized and easy to use road trip planner to make planning more fun. 
