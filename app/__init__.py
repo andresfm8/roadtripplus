@@ -139,8 +139,7 @@ def getUser():
     return user
 
 
-def addDest(order, place_id, area_name, lat, lng):
-    trip_id = session["trip_id"]
+def addDest(order, place_id, area_name, lat, lng, trip_id):
     newDest = Destination(
         order=order,
         place_id=place_id,
@@ -271,7 +270,7 @@ def createDestinations(trip_id):
             area_name = (p['location_data']['area_name'])
             lat = (p['location_data']['coordinate']['location']['lat'])
             lng = (p['location_data']['coordinate']['location']['lng'])
-            addDest(order,place_id,area_name,lat,lng)
+            addDest(order,place_id,area_name,lat,lng, trip_id)
            
 
     # json_data contains an arry of destinations

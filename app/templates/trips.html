@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Red Rose"
+      rel="stylesheet"
+    />
+    <link
+      href="../static/styles/normalize.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="../static/styles/trips.css" rel="stylesheet" type="text/css" />
+    <title>RoadTrip+</title>
+  </head>
 
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Red Rose" rel="stylesheet" />
-  <link href="../static/styles/normalize.css" rel="stylesheet" type="text/css" />
-  <link href="../static/styles/trips.css" rel="stylesheet" type="text/css" />
-  <title>RoadTrip+</title>
-</head>
-
-<body>
-  <div class="container">
-    <img id="profile" src="{{ user.picture }}" />
-    <h1>Welcome {{ user.name }}, Your Road Trips</h1>
-    <div class="create">
-      <button id="createbtn">create trip</button>
+  <body>
+    <div class="container">
+      <img id="profile" src="{{ user.picture }}" />
+      <h1>Welcome {{ user.name }}, Your Road Trips</h1>
+      <div class="create">
+        <button id="createbtn">create trip</button>
+      </div>
+      <main class="grid">
+        {% for trip in user.trips %}
+        <article>
+          <img src="../static/img/road.jpg" alt="" />
+          <div class="text">
+            <h3>{{ trip.name }}</h3>
+            <button id="trip">see trip</button>
+          </div>
+        </article>
+        {% endfor %}
+      </main>
     </div>
-    <main class="grid">
-      {% for trip in user.trips %}
-      <article>
-        <img src="../static/img/road.jpg" alt="" />
-        <div class="text">
-          <h3>{{ trip.name }}</h3>
-          <button id="trip">see trip</button>
-        </div>
-      </article>
-      {% endfor %}
-    </main>
-  </div>
-  <div class="popup">
-    <div class="popup-content">
-      <img src="https://img.icons8.com/ios/50/000000/cancel.png" alt="Close" class="close" />
-      <label>Trip Name:</label><br />
-      <input type="triptext" id="name" placeholder="Enter Name" />
-      <button id="savebtn" class="savebtn">save</button>
+    <div class="popup">
+      <div class="popup-content">
+        <img
+          src="https://img.icons8.com/ios/50/000000/cancel.png"
+          alt="Close"
+          class="close"
+        />
+        <label>Trip Name:</label><br />
+        <input type="triptext" id="name" placeholder="Enter Name" />
+        <button id="savebtn" class="savebtn">save</button>
+      </div>
     </div>
-<<<<<<< HEAD
     <script>
       document
         .getElementById("createbtn")
@@ -44,7 +54,7 @@
             .getElementById("savebtn")
             .addEventListener("click", function () {
               name = document.getElementById("name").value;
-              tripUrl = "http://localhost:5000/api/create_trip/" + name;
+              tripUrl = "api/create_trip/" + name;
               window.location = tripUrl;
             });
         });
@@ -52,35 +62,11 @@
       document.querySelector(".close").addEventListener("click", function () {
         document.querySelector(".popup").style.display = "none";
       });
+
+      //WHY ISNT THIS WORKING?!?!?!
+      document.getElementById("trip").addEventListener("click", function () {
+        document.querySelector(".popup").style.display = "flex";
+      });
     </script>
   </body>
 </html>
-=======
-  </div>
-  <script>
-    document
-      .getElementById("createbtn")
-      .addEventListener("click", function () {
-        document.querySelector(".popup").style.display = "flex";
-        document
-          .getElementById("savebtn")
-          .addEventListener("click", function () {
-            name = document.getElementById("name").value;
-            tripUrl = "api/create_trip/" + name;
-            window.location = tripUrl;
-          });
-      });
-
-    document.querySelector(".close").addEventListener("click", function () {
-      document.querySelector(".popup").style.display = "none";
-    });
-
-    //WHY ISNT THIS WORKING?!?!?!
-    document.getElementById("trip").addEventListener("click", function () {
-      document.querySelector(".popup").style.display = "flex";
-    });
-  </script>
-</body>
-
-</html>
->>>>>>> 2a5e83fa3500e3895e9f5ddc07d6dd5c0fc23c0b
