@@ -61,7 +61,13 @@ function initLocationButton(map) {
 /*
   API Requests
 */
-function fetchDestinations() {}
+function fetchDestinations() {
+  fetch("http://localhost:5000/api/create_destination/1").then((data) =>
+    data.json()
+  );
+  //Set destinations map by iterating through data
+  //call in init
+}
 
 function saveDestinations() {
   if (destinationsMap.size > 0) {
