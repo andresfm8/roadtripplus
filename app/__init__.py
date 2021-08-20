@@ -119,7 +119,7 @@ def addUser(userInfo):
         return
 
 
-# returns the user object 
+# returns the user object
 def getUser():
     user = {}
     user["email"] = session["email"]
@@ -134,21 +134,20 @@ def addDest(order, dest_id, trip_id):
     db.session.commit()
 
 
-
 # checks if the user has any trips present in db
 def checkTrips(userInfo):
     email = userInfo["email"]
     user = Person.query.filter_by(email=email).first()
     # Populating with dummy data
-    #trip1 = Trip(name="NY", person_id=user.id)
+    # trip1 = Trip(name="NY", person_id=user.id)
     # trip2 = Trip(name="SF", person_id=user.id)
-    #db.session.add(trip1)
+    # db.session.add(trip1)
     # db.session.add(trip2)
-    #db.session.commit()
-    #trip = Trip.query.first()
-    #dest1 = Destination(order="1", address="123 Test Ave", trip_id=trip.id)
-    #db.session.add(dest1)
-    #db.session.commit()
+    # db.session.commit()
+    # trip = Trip.query.first()
+    # dest1 = Destination(order="1", address="123 Test Ave", trip_id=trip.id)
+    # db.session.add(dest1)
+    # db.session.commit()
     trips = user.trips
     return trips
 
@@ -175,16 +174,16 @@ def landing_page():
 @app.route("/trips")
 def trips_page():
     user = getUser()
-       # checks if user has any trips stored
+    # checks if user has any trips stored
     trips = checkTrips(user)
     # if does then stores it into user_info dict
     user["trips"] = trips
-    return render_template("trips.html", user = user)
+    return render_template("trips.html", user=user)
 
 
 @app.route("/planner")
 def planner_page():
-    #TODO pull up destinations here
+    # TODO pull up destinations here
     return render_template("planner.html")
 
 
@@ -242,10 +241,12 @@ def createTrip(trip_name):
     addTrip(email, trip_name)
     return redirect("/login")
 
+
 @app.route("/api/create_destination/<order>/<dest_id>/<trip_id>")
 def createDestination(order, dest_id, trip_id):
     addDest(order, dest_id, trip_id)
     return redirect("/planner")
+
 
 @app.before_first_request
 def before_req_func():
