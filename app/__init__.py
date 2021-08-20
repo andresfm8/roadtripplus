@@ -1,4 +1,5 @@
 import os
+
 # from sys import last_traceback
 # from typing_extensions import OrderedDict
 from flask import Flask, request, redirect, url_for, session, render_template
@@ -19,7 +20,7 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10)
 # PostgresSQL congig
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 # app.config[
 #     "SQLALCHEMY_DATABASE_URI"
 # ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
@@ -246,7 +247,7 @@ def createTrip(trip_name):
 
 @app.route("/api/create_destination/<trip_id>", methods=["POST"])
 def createDestination(trip_id):
-    #if get send data, if post save data
+    # if get send data, if post save data
     json_data = request.data
     # json_data contains an arry of destinations
     # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
