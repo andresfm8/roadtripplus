@@ -147,6 +147,8 @@ def addDest(order, place_id, area_name, lat, lng, trip_id):
         lng=lng,
         trip_id=trip_id,
     )
+    trip = Trip.query.filter_by(person_id=trip_id).first()
+    print(trip.destination)
     db.session.add(newDest)
     db.session.commit()
 
