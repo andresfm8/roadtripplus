@@ -34,6 +34,28 @@
       <input type="triptext" id="name" placeholder="Enter Name" />
       <button id="savebtn" class="savebtn">save</button>
     </div>
+<<<<<<< HEAD
+    <script>
+      document
+        .getElementById("createbtn")
+        .addEventListener("click", function () {
+          document.querySelector(".popup").style.display = "flex";
+          document
+            .getElementById("savebtn")
+            .addEventListener("click", function () {
+              name = document.getElementById("name").value;
+              tripUrl = "http://localhost:5000/api/create_trip/" + name;
+              window.location = tripUrl;
+            });
+        });
+
+      document.querySelector(".close").addEventListener("click", function () {
+        document.querySelector(".popup").style.display = "none";
+      });
+    </script>
+  </body>
+</html>
+=======
   </div>
   <script>
     document
@@ -61,3 +83,4 @@
 </body>
 
 </html>
+>>>>>>> 2a5e83fa3500e3895e9f5ddc07d6dd5c0fc23c0b

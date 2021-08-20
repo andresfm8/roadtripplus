@@ -1,71 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Red Rose"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../static/styles/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script src="../static/js/main.js"></script>
+    <title>RoadTrip+</title>
+  </head>
 
-<head>
-  <link href='https://fonts.googleapis.com/css?family=Red Rose' rel='stylesheet'>
-  <link rel="stylesheet" type="text/css" href="../static/styles/main.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <script src="../static/js/main.js"></script>
-  <title>RoadTrip+</title>
-</head>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Red Rose"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../static/styles/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <script src="../static/js/main.js"></script>
+    <title>RoadTrip+</title>
+  </head>
 
-<body style="background-color: #f7c230;">
+  <body style="background-color: #f7c230">
+    <div class="container">
+      <div>
+        <ul>
+          <li>
+            <button class="active" id="savebtn" onclick="saveDestinations()">
+              save trip
+            </button>
+          </li>
+          <li><a href="trips" class="navbtn">view trips</a></li>
+        </ul>
+      </div>
 
-  <div class="container">
+      <div class="row">
+        <div id="map"></div>
+      </div>
 
-    <div>
-      <ul>
-        <li><button class="active" id="savebtn" onclick="saveDestinations()">save trip</button></li>
-        <li><a href="trips" class="navbtn">view trips</a></li>
-      </ul>
-    </div>
+      <div class="row">
+        <div class="column">
+          <h2>Enter Your Destinations:</h2>
+          <form id="location">
+            <i class="material-icons">location_on</i>
+            <label for="adest">A Destination:</label><br />
+            <input
+              id="pac-input"
+              class="controls"
+              type="text"
+              placeholder="Search Box"
+            />
+          </form>
+          <div>
+            <ul id="destinations-list"></ul>
+          </div>
+        </div>
 
-    <div class="row">
-      <div id="map"></div>
-    </div>
-
-    <div class="row">
-      <div class="column">
-        <h2>Enter Your Destinations:</h2>
-        <form id="location">
-          <i class="material-icons">location_on</i>
-          <label for="adest">A Destination:</label><br>
-          <input id="pac-input" class="controls" type="text" placeholder="Search Box" />
-        </form>
-        <div>
-          <ul id="destinations-list"></ul>
+        <div class="column">
+          <h2>Your Trip Summary:</h2>
+          <form>
+            <i class="material-icons">schedule</i>
+            <label for="totaltravel">Estimated Total Travel Time:</label><br />
+            <input type="text" name="output" id="total-time" /><br />
+            <i class="material-icons">time_to_leave</i>
+            <label for="totaldistance">Estimated Total Distance:</label><br />
+            <input type="text" name="outputt" id="total-distance" disabled />
+          </form>
         </div>
       </div>
+    </div>
 
-      <div class="column">
-        <h2>Your Trip Summary:</h2>
-        <form>
-          <i class="material-icons">schedule</i>
-          <label for="totaltravel">Estimated Total Travel Time:</label><br>
-          <input type="text" name="output" id="total-time" /><br>
-          <i class="material-icons">time_to_leave</i>
-          <label for="totaldistance">Estimated Total Distance:</label><br>
-          <input type="text" name="outputt" id="total-distance" disabled />
-        </form>
+    <div class="popup">
+      <div class="popup-content">
+        <img
+          src="https://img.icons8.com/ios/50/000000/cancel.png"
+          alt="Close"
+          class="close"
+        />
+        <label>Trip Name:</label><br />
+        <input type="triptext" placeholder="Enter Name" />
+        <a href="#" class="savebtn">save</a>
       </div>
     </div>
-  </div>
 
-  <div class="popup">
-    <div class="popup-content">
-      <img src="https://img.icons8.com/ios/50/000000/cancel.png" alt="Close" class="close">
-      <label>Trip Name:</label><br>
-      <input type="triptext" placeholder="Enter Name">
-      <a href="#" class="savebtn">save</a>
-    </div>
-  </div>
-
-  <!-- Eventually move it to main.js and call googlemaps.util from there. -->
-  <script src="../static/js/google-maps/googlemaps.util.js"></script>
-  <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0&callback=initMap&libraries=places&v=weekly"
-    async></script>
-</body>
-
+    <!-- Eventually move it to main.js and call googlemaps.util from there. -->
+    <script src="../static/js/google-maps/googlemaps.util.js"></script>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+  </body>
 </html>

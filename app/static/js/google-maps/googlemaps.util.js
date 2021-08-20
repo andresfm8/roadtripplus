@@ -3,12 +3,12 @@ let map, infoWindow, initialMarker;
 
 function initMap() {
   let options = {
-    center: { lat: 25.34, lng: 137.80 },
+    center: { lat: 25.34, lng: 137.8 },
     zoom: 2.5,
     disableDefaultUI: true,
     zoomControl: true,
-    mapTypeId: "roadmap"
-  }
+    mapTypeId: "roadmap",
+  };
 
   map = new google.maps.Map(document.getElementById("map"), options);
 
@@ -44,10 +44,8 @@ function initMap() {
 }
 //Disable the default markers (keep the directions markers)
 function toggleMarker(latLng, map) {
-  if (destinationsMap.size < 2)
-    placeMarker(latLng, map);
-  else if (destinationsMap.size == 2)
-    initialMarker.setMap(null);
+  if (destinationsMap.size < 2) placeMarker(latLng, map);
+  else if (destinationsMap.size == 2) initialMarker.setMap(null);
 }
 
 function initLocationButton(map) {
@@ -64,8 +62,9 @@ function initLocationButton(map) {
   API Requests
 */
 function fetchDestinations() {
-  fetch("http://localhost:5000/api/create_destination/1")
-    .then(data => data.json());
+  fetch("http://localhost:5000/api/create_destination/1").then((data) =>
+    data.json()
+  );
   //Set destinations map by iterating through data
   //call in init
 }
@@ -73,13 +72,15 @@ function fetchDestinations() {
 function saveDestinations() {
   if (destinationsMap.size > 0) {
     let destinationsArr = [];
-    destinationsMap.forEach((value, key) => { destinationsArr.push({ order: key, location_data: value }) })
+    destinationsMap.forEach((value, key) => {
+      destinationsArr.push({ order: key, location_data: value });
+    });
     let data = JSON.stringify(destinationsArr);
 
-    fetch("http://localhost:5000/api/create_destination/1", {
+    fetch("http://localhost:5000/api/destination/1", {
       method: "POST",
-      body: data
-    }).then(res => {
+      body: data,
+    }).then((res) => {
       console.log("Request complete! response:", res);
     });
   }
@@ -89,7 +90,6 @@ function saveDestinations() {
   Move map to current location
 */
 function moveToCurrentLocation(infoWindow) {
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -123,7 +123,7 @@ async function displayRoute(service, display) {
   if (destinationsMap.size > 2) {
     for (const [key, value] of destinationsMap.entries()) {
       if (counter != 1 && counter != destinationsMap.size)
-        waypoints.push(value.coordinate)
+        waypoints.push(value.coordinate);
       counter++;
     }
   }
@@ -132,7 +132,10 @@ async function displayRoute(service, display) {
     service
       .route({
         origin: getFirstValue(),
-        destination: destinationsMap.size > 1 ? getLastValue().coordinate.location : undefined,
+        destination:
+          destinationsMap.size > 1
+            ? getLastValue().coordinate.location
+            : undefined,
         waypoints: waypoints ? [...waypoints] : undefined,
         travelMode: google.maps.TravelMode.DRIVING,
         avoidTolls: true,
@@ -149,7 +152,7 @@ async function displayRoute(service, display) {
   Add drag event listener to dragable markers
 */
 function geocodeAddress(geocoder, display) {
-  display.directions.geocoded_waypoints.forEach(waypoint => {
+  display.directions.geocoded_waypoints.forEach((waypoint) => {
     geocoder
       .geocode({ placeId: waypoint.place_id })
       .then(({ results }) => checkvals(results[0]));
@@ -157,42 +160,50 @@ function geocodeAddress(geocoder, display) {
 }
 
 let addressByCoordinates = function (geocoder, coordinates) {
-  return geocoder.geocode({ location: coordinates })
-    .then(({ results }) => { return results[0] })
+  return geocoder
+    .geocode({ location: coordinates })
+    .then(({ results }) => {
+      return results[0];
+    })
     .catch((e) =>
       alert("Geocode was not successful for the following reason: " + e)
     );
-}
+};
 
 function checkvals(waypoint) {
   let exists = false;
   let missingKey = undefined;
 
   for (const [key, value] of destinationsMap.entries()) {
-    if ((waypoint.place_id.localeCompare(value.place_id)) !== 0) {
+    if (waypoint.place_id.localeCompare(value.place_id) !== 0) {
       missingKey = key;
-      exists = true
+      exists = true;
     }
   }
   if (missingKey)
-    buildMap(missingKey, waypoint.place_id, waypoint.formatted_address, waypoint.geometry.location);
-
+    buildMap(
+      missingKey,
+      waypoint.place_id,
+      waypoint.formatted_address,
+      waypoint.geometry.location
+    );
 }
 
 /*
   Add a marker on the map
 */
 function placeMarker(latLng, map) {
-
-  let content;//content = function
+  let content; //content = function
   //CREATE FUNCTION THAT REQUEST DATA FROM GEOCODING API move to function
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat()},${latLng.lng()}&key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0`)
-    .then(res => res.json())
-    .then(data => {
+  fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat()},${latLng.lng()}&key=AIzaSyC36j1eUXC0390oR1U3joY7onMSuqBU_U0`
+  )
+    .then((res) => res.json())
+    .then((data) => {
       if (data.results.length) content = data.results[0].formatted_address;
       else content = latLng.lat() + ", " + latLng.lng();
     })
-    .catch(e => console.log("invalid address"))
+    .catch((e) => console.log("invalid address"));
   let marker = new google.maps.Marker({
     position: latLng,
     map: map,
@@ -206,7 +217,6 @@ function placeMarker(latLng, map) {
     infoWindow.open(map, marker);
   });
   // map.panTo(latLng);
-
 }
 
 /*
@@ -292,7 +302,7 @@ function updateList() {
   let node = document.createElement("LI");
   for (const [key, value] of destinationsMap.entries()) {
     node.className += `destination-${key}`;
-    let textnode = document.createTextNode(`${key}, ${value.area_name}`);// do reverse geocoding
+    let textnode = document.createTextNode(`${key}, ${value.area_name}`); // do reverse geocoding
     node.appendChild(textnode);
     document.getElementById("destinations-list").appendChild(node);
   }
@@ -304,18 +314,22 @@ async function addElementToMap(geocoder, coordinates) {
   if (destinationsMap.size == 0)
     buildMap(1, place.place_id, place.formatted_address, coordinates);
   else
-    buildMap(getLastKey() + 1, place.place_id, place.formatted_address, coordinates);
+    buildMap(
+      getLastKey() + 1,
+      place.place_id,
+      place.formatted_address,
+      coordinates
+    );
 }
 
 function buildMap(key, place, areaName, coordinates) {
-  destinationsMap.set(
-    key,
-    {
-      place_id: place,
-      area_name: areaName,
-      coordinate: { location: coordinates }
-    });
+  destinationsMap.set(key, {
+    place_id: place,
+    area_name: areaName,
+    coordinate: { location: coordinates },
+  });
 }
 const getLastKey = () => Array.from(destinationsMap.keys()).pop();
-const getFirstValue = () => destinationsMap.values().next().value.coordinate.location;
+const getFirstValue = () =>
+  destinationsMap.values().next().value.coordinate.location;
 const getLastValue = () => [...destinationsMap][destinationsMap.size - 1][1];
