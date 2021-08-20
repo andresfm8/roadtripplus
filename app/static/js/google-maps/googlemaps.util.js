@@ -69,9 +69,13 @@ function fetchDestinations() {
 
 function saveDestinations() {
   if (destinationsMap.size > 0) {
-    fetch("localhost:5000", {
+    let destinationsArr = [];
+    destinationsMap.forEach((value, key) => { destinationsArr.push({ order: key, location_data: value }) })
+    let data = JSON.stringify(destinationsArr);
+
+    fetch("http://localhost:5000/api/create_destination/1", {
       method: "POST",
-      body: JSON.stringify(destinationsMap)
+      body: data
     }).then(res => {
       console.log("Request complete! response:", res);
     });

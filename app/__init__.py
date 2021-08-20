@@ -1,5 +1,7 @@
 import os
-from flask import Flask, redirect, url_for, session, render_template
+from sys import last_traceback
+from typing_extensions import OrderedDict
+from flask import Flask, request, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
@@ -242,9 +244,19 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/create_destination/<order>/<dest_id>/<trip_id>")
-def createDestination(order, dest_id, trip_id):
-    addDest(order, dest_id, trip_id)
+@app.route("/api/create_destination/<trip_id>", methods=["POST"])
+def createDestination(trip_id):
+    #if get send data, if post save data
+    json_data = request.data
+    # json_data contains an arry of destinations
+    # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
+    # Destination
+    #  - Order number
+    #  - place_id string
+    #  - area_name string
+    #  - lat string
+    #  - lng string
+    # addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
 
