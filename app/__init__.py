@@ -28,7 +28,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 #     host=os.getenv("POSTGRES_HOST"),
 #     port=5432,
 #     table=os.getenv("POSTGRES_DB"),
-#)
+# )
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -136,9 +136,21 @@ def getUser():
     return user
 
 
+<<<<<<< HEAD
 def addDest(order, place_id, area_name, lat, lng):
     trip_id = session["trip_id"]
     newDest = Destination(order=order, place_id=place_id, area_name=area_name,lat=lat, lng=lng, trip_id=trip_id)
+=======
+def addDest(order, dest_id, trip_id):
+    newDest = Destination(
+        order=order,
+        place_id=place_id,
+        area_name=area_name,
+        lat=lat,
+        lng=lng,
+        trip_id=trip_id,
+    )
+>>>>>>> f5bad10dec39df74a7cd2676cb4dac3a0a8333e5
     db.session.add(newDest)
     db.session.commit()
     print("Success")
@@ -194,8 +206,12 @@ def trips_page():
 @app.route("/planner/<trip_id>")
 def planner_page(trip_id):
     # TODO pull up destinations here
+<<<<<<< HEAD
     #destinations = getDest(trip_id)
     session["trip_id"] = trip_id
+=======
+    # destinations = getDest(trip_id)
+>>>>>>> f5bad10dec39df74a7cd2676cb4dac3a0a8333e5
     return render_template("planner.html")
 
 
@@ -231,13 +247,18 @@ def logout():
         session.pop(key)
     return redirect("/")
 
+
 # api route that returns destinations by trip_id
 def getDest(trip_id):
     trip = Trip.query.filter_by(person_id=trip_id).first()
     destination = trip.destination
     destDic = {}
 
+<<<<<<< HEAD
 
+=======
+    return str
+>>>>>>> f5bad10dec39df74a7cd2676cb4dac3a0a8333e5
 
 
 # api route that creates a new trip and routes to trip page
@@ -248,10 +269,10 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/destination/<trip_id>", methods=['POST', 'GET'])
+@app.route("/api/destination/<trip_id>", methods=["POST", "GET"])
 def createDestinations(trip_id):
     # if get send data, if post save data
-    if request.method == 'POST':
+    if request.method == "POST":
         json_data = request.data
         #print(json_data)
         json_list = json.loads(json_data)
@@ -265,7 +286,7 @@ def createDestinations(trip_id):
            
 
     # json_data contains an arry of destinations
-        #addDest(order, dest_id, trip_id)
+    # addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
 
