@@ -1,5 +1,4 @@
 import os
-from sys import last_traceback
 from typing_extensions import OrderedDict
 from flask import Flask, request, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
@@ -19,20 +18,16 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_NAME"] = "google-login-session"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10)
 # PostgresSQL congig
-<<<<<<< HEAD
-#app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///test.db'
-=======
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
->>>>>>> 1b96e4d97bac9d23255badca3d018ff0e3b55c87
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
-    user=os.getenv("POSTGRES_USER"),
-    passwd=os.getenv("POSTGRES_PASSWORD"),
-    host=os.getenv("POSTGRES_HOST"),
-    port=5432,
-    table=os.getenv("POSTGRES_DB"),
-)
+# app.config[
+#     "SQLALCHEMY_DATABASE_URI"
+# ] = "postgresql+psycopg2://{user}:{passwd}@{host}:{port}/{table}".format(
+#     user=os.getenv("POSTGRES_USER"),
+#     passwd=os.getenv("POSTGRES_PASSWORD"),
+#     host=os.getenv("POSTGRES_HOST"),
+#     port=5432,
+#     table=os.getenv("POSTGRES_DB"),
+#)
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -93,16 +88,22 @@ class Trip(db.Model):
 class Destination(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer)
-    dest_id = db.Column(db.String())
+    place_id = db.Column(db.String())
+    area_name = db.Column(db.String())
+    lat = db.Column(db.String())
+    lng = db.Column(db.String())
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"), nullable=False)
 
-    def __init__(self, order, dest_id):
+    def __init__(self, order, place_id, area_name, lat, lng, trip_id):
         self.order = order
-        self.dest_id = dest_id
+        self.place_id = place_id
+        self.area_name = area_name
+        self.lat = lat
+        self.lng = lng
         self.trip_id = trip_id
 
     def __repr__(self):
-        return f"Destinations('{self.order}', '{self.dest_id}','{self.trip_id}')"
+        return f"Destinations('{self.order}', '{self.place_id}','{self.area_name}','{self.lat}','{self.lng}','{self.trip_id}')"
 
 
 # stores user information into db
@@ -135,7 +136,7 @@ def getUser():
 
 
 def addDest(order, dest_id, trip_id):
-    newDest = Destination(order=order, dest_id=dest_id, trip_id=trip_id)
+    newDest = Destination(order=order, place_id=place_id, area_name=area_name,lat=lat, lng=lng, trip_id=trip_id)
     db.session.add(newDest)
     db.session.commit()
 
@@ -190,8 +191,8 @@ def trips_page():
 @app.route("/planner/<trip_id>")
 def planner_page(trip_id):
     # TODO pull up destinations here
-    destinations = {}
-    return render_template("planner.html", destinations=destinations)
+    #destinations = getDest(trip_id)
+    return render_template("planner.html")
 
 
 @app.route("/login")
@@ -226,18 +227,14 @@ def logout():
         session.pop(key)
     return redirect("/")
 
-
 # api route that returns destinations by trip_id
-@app.route("/api/<trip_id>/destinations")
-def getDestinations(trip_id):
+def getDest(trip_id):
     trip = Trip.query.filter_by(person_id=trip_id).first()
     destination = trip.destination
-    str = ""
-    # TODO: convert to json
-    for value in destination:
-        str += (
-            f"order: {value.order} dest_id: {value.dest_id}, trip_id: {value.trip_id} "
-        )
+    destDic = {}
+
+
+
     return str
 
 
@@ -249,19 +246,16 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/create_destination/<trip_id>", methods=["POST"])
-def createDestination(trip_id):
+@app.route("/api/destination/<trip_id>", methods=['POST', 'GET'])
+def createDestinations(trip_id):
     # if get send data, if post save data
-    json_data = request.data
+    if request.method == 'POST':
+        json_data = request.data
+        print(json_data)
+        for i in range(len(json_data)):
+            print(json_data[i]["order"])
     # json_data contains an arry of destinations
-    # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
-    # Destination
-    #  - Order number
-    #  - place_id string
-    #  - area_name string
-    #  - lat string
-    #  - lng string
-    # addDest(order, dest_id, trip_id)
+        #addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
 
