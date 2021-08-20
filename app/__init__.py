@@ -1,7 +1,5 @@
 import os
 import json
-from typing_extensions import OrderedDict
-
 # from sys import last_traceback
 # from typing_extensions import OrderedDict
 from flask import Flask, request, redirect, url_for, session, render_template
@@ -94,8 +92,8 @@ class Destination(db.Model):
     order = db.Column(db.Integer)
     place_id = db.Column(db.String())
     area_name = db.Column(db.String())
-    lat = db.Column(db.Integer)
-    lng = db.Column(db.Integer)
+    lat = db.Column(db.String())
+    lng = db.Column(db.String())
     trip_id = db.Column(db.Integer, db.ForeignKey("trip.id"), nullable=False)
 
     def __init__(self, order, place_id, area_name, lat, lng, trip_id):
@@ -150,7 +148,6 @@ def addDest(order, place_id, area_name, lat, lng, trip_id):
     )
     db.session.add(newDest)
     db.session.commit()
-    print("Success")
 
 
 # checks if the user has any trips present in db
@@ -204,7 +201,6 @@ def trips_page():
 def planner_page(trip_id):
     # TODO pull up destinations here
     #destinations = getDest(trip_id)
-    session["trip_id"] = trip_id
     return render_template("planner.html")
 
 
@@ -242,11 +238,17 @@ def logout():
 
 
 # api route that returns destinations by trip_id
-def getDest(trip_id):
+@app.route("/api/<trip_id>/destinations")
+def getDestinations(trip_id):
     trip = Trip.query.filter_by(person_id=trip_id).first()
     destination = trip.destination
-    destDic = {}
-
+    str = ""
+    # TODO: convert to json
+    for value in destination:
+        str += (
+            f"order: {value.order} dest_id: {value.dest_id}, trip_id: {value.trip_id} "
+        )
+    return str
 
 
 # api route that creates a new trip and routes to trip page
@@ -257,8 +259,8 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/destination/<trip_id>", methods=["POST", "GET"])
-def createDestinations(trip_id):
+@app.route("/api/destination/<trip_id>", methods=["POST"])
+def createDestination(trip_id):
     # if get send data, if post save data
     if request.method == "POST":
         json_data = request.data
@@ -274,6 +276,13 @@ def createDestinations(trip_id):
            
 
     # json_data contains an arry of destinations
+    # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
+    # Destination
+    #  - Order number
+    #  - place_id string
+    #  - area_name string
+    #  - lat string
+    #  - lng string
     # addDest(order, dest_id, trip_id)
     return redirect("/planner")
 
