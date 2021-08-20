@@ -1,25 +1,8 @@
-/** TODO: 
- * Button to set current location as origin
- * Generate list of destinations
- * Remove + button
- * Create array and push each marker to it
- * Assign an id or some identifier to each marker and 
- * If the marker is moved then updated the value
- * If the marker is removed then update the order and remove from markerlist?
- * How to get markers of directions
- * IDEA: SAVE EACH WAYPOINT AS WELL AS ORIGIN AND DESTINATION
- * WHEN? ANYTHING CHANGES, THEN LOOK FOR THE ONE THAT JUST CHANGED (WITH THE TRACKER probs a hashmap)
- * THEN UPDATE AND SET DIRECTIONS AGAIN -> Basically will have to re-render directions, sucks but depends on gmaps api
-*/
-
-//Key: Order, Value: Coordinates
 const destinationsMap = new Map();
 let map, infoWindow, initialMarker;
 
 function initMap() {
   let options = {
-    // TO DO: Set the location to be your location if user allows location usage
-    // Else set a random location?
     center: { lat: 25.34, lng: 137.80 },
     zoom: 2.5,
     disableDefaultUI: true,
@@ -40,22 +23,24 @@ function initMap() {
     draggable: true,
     map,
   });
-
+  const geocoder = new google.maps.Geocoder();
   directionsRenderer.addListener("directions_changed", () => {
     const directions = directionsRenderer.getDirections();
 
     if (directions) {
       computeTotalDistance(directions);
     }
+    geocodeAddress(geocoder, directionsRenderer);
+    updateList();
   });
 
-  map.addListener("click", (mapsMouseEvent) => {
-    addElementToMap(mapsMouseEvent.latLng);
-    toggleMarker(mapsMouseEvent.latLng, map);
-    displayRoute(directionsService, directionsRenderer);
+  map.addListener("click", async (mapsMouseEvent) => {
+    await addElementToMap(geocoder, mapsMouseEvent.latLng);
+    await toggleMarker(mapsMouseEvent.latLng, map);
+    await displayRoute(directionsService, directionsRenderer);
   });
 
-  autocomplete(map, directionsService, directionsRenderer);
+  autocomplete(geocoder, map, directionsService, directionsRenderer);
 }
 //Disable the default markers (keep the directions markers)
 function toggleMarker(latLng, map) {
@@ -76,10 +61,32 @@ function initLocationButton(map) {
 }
 
 /*
+  API Requests
+*/
+function fetchDestinations() {
+
+}
+
+function saveDestinations() {
+  if (destinationsMap.size > 0) {
+    let destinationsArr = [];
+    destinationsMap.forEach((value, key) => { destinationsArr.push({ order: key, location_data: value }) })
+    let data = JSON.stringify(destinationsArr);
+
+    fetch("http://localhost:5000/api/create_destination/1", {
+      method: "POST",
+      body: data
+    }).then(res => {
+      console.log("Request complete! response:", res);
+    });
+  }
+}
+
+/*
   Move map to current location
 */
 function moveToCurrentLocation(infoWindow) {
-  // TODO: Replace info window with marker
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -106,14 +113,14 @@ function moveToCurrentLocation(infoWindow) {
 /*
   Directions service
 */
-function displayRoute(service, display) {
+async function displayRoute(service, display) {
   let waypoints = [];
   //Create list of stops without origin and destination
   let counter = 1;
   if (destinationsMap.size > 2) {
     for (const [key, value] of destinationsMap.entries()) {
       if (counter != 1 && counter != destinationsMap.size)
-        waypoints.push(value)
+        waypoints.push(value.coordinate)
       counter++;
     }
   }
@@ -121,8 +128,8 @@ function displayRoute(service, display) {
   if (destinationsMap.size > 1) {
     service
       .route({
-        origin: getFirstValue().location,
-        destination: destinationsMap.size > 1 ? getLastValue().location : undefined,
+        origin: getFirstValue(),
+        destination: destinationsMap.size > 1 ? getLastValue().coordinate.location : undefined,
         waypoints: waypoints ? [...waypoints] : undefined,
         travelMode: google.maps.TravelMode.DRIVING,
         avoidTolls: true,
@@ -134,6 +141,39 @@ function displayRoute(service, display) {
         alert("Could not display directions due to: " + e);
       });
   }
+}
+/*
+  Add drag event listener to dragable markers
+*/
+function geocodeAddress(geocoder, display) {
+  display.directions.geocoded_waypoints.forEach(waypoint => {
+    geocoder
+      .geocode({ placeId: waypoint.place_id })
+      .then(({ results }) => checkvals(results[0]));
+  });
+}
+
+let addressByCoordinates = function (geocoder, coordinates) {
+  return geocoder.geocode({ location: coordinates })
+    .then(({ results }) => { return results[0] })
+    .catch((e) =>
+      alert("Geocode was not successful for the following reason: " + e)
+    );
+}
+
+function checkvals(waypoint) {
+  let exists = false;
+  let missingKey = undefined;
+
+  for (const [key, value] of destinationsMap.entries()) {
+    if ((waypoint.place_id.localeCompare(value.place_id)) !== 0) {
+      missingKey = key;
+      exists = true
+    }
+  }
+  if (missingKey)
+    buildMap(missingKey, waypoint.place_id, waypoint.formatted_address, waypoint.geometry.location);
+
 }
 
 /*
@@ -157,17 +197,12 @@ function placeMarker(latLng, map) {
   initialMarker = marker;
 
   google.maps.event.addListener(marker, "click", function (event) {
-    // let latitude = event.latLng.lat();
-    // let longitude = event.latLng.lng();
     infoWindow.close();
     //If Alias then content = alias, else content = city,country of the location
     infoWindow.setContent(`${content}`);
     infoWindow.open(map, marker);
   });
   // map.panTo(latLng);
-  google.maps.event.addListener(marker, "drag", function (event) {
-    console.log("drag");
-  });
 
 }
 
@@ -186,18 +221,18 @@ function computeTotalDistance(result) {
     total += myroute.legs[i].distance.value;
   }
   total = total / 1000;
-  // document.getElementById("total").innerHTML = total + " km";
+
+  document.getElementById("total-distance").value = total + " km";
+  //TODO: ADD TIME
 }
 
 /*
   Autocomplete
 */
-function autocomplete(map, service, display) {
+function autocomplete(geocoder, map, service, display) {
   // Create the search box and link it to the UI element.
-  //TODO: Search box has to be dynamic -> execute autocomplete on the searchbox that is called
   const input = document.getElementById("pac-input");
   const searchBox = new google.maps.places.SearchBox(input);
-  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
   // Bias the SearchBox results towards current map's viewport.
   map.addListener("bounds_changed", () => {
     searchBox.setBounds(map.getBounds());
@@ -212,15 +247,15 @@ function autocomplete(map, service, display) {
     }
 
     const bounds = new google.maps.LatLngBounds();
-    places.forEach((place) => {
+    places.forEach(async (place) => {
       if (!place.geometry || !place.geometry.location) {
         console.log("Returned place contains no geometry");
         return;
       }
 
-      addElementToMap(place.geometry.location);
-      toggleMarker(place.geometry.location, map);
-      displayRoute(service, display);
+      await addElementToMap(geocoder, place.geometry.location);
+      await toggleMarker(place.geometry.location, map);
+      await displayRoute(service, display);
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
@@ -249,22 +284,35 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 /*
   Add HTML content
 */
-function updateList(key, value) {
+function updateList() {
+  document.getElementById("destinations-list").replaceChildren();
   let node = document.createElement("LI");
-  let textnode = document.createTextNode(`${key}, ${value.location}`);// do reverse geocoding
-  node.appendChild(textnode);
-  document.getElementById("destinations-list").appendChild(node);
+  for (const [key, value] of destinationsMap.entries()) {
+    node.className += `destination-${key}`;
+    let textnode = document.createTextNode(`${key}, ${value.area_name}`);// do reverse geocoding
+    node.appendChild(textnode);
+    document.getElementById("destinations-list").appendChild(node);
+  }
 }
 
-//destinationMaps util functions
-function addElementToMap(coordinates) {
+async function addElementToMap(geocoder, coordinates) {
+  let place = await addressByCoordinates(geocoder, coordinates);
+
   if (destinationsMap.size == 0)
-    destinationsMap.set(1, { location: coordinates });
-  else {
-    destinationsMap.set(getLastKey() + 1, { location: coordinates })
-  }
-  updateList(getLastKey(), getLastValue());
+    buildMap(1, place.place_id, place.formatted_address, coordinates);
+  else
+    buildMap(getLastKey() + 1, place.place_id, place.formatted_address, coordinates);
+}
+
+function buildMap(key, place, areaName, coordinates) {
+  destinationsMap.set(
+    key,
+    {
+      place_id: place,
+      area_name: areaName,
+      coordinate: { location: coordinates }
+    });
 }
 const getLastKey = () => Array.from(destinationsMap.keys()).pop();
-const getFirstValue = () => destinationsMap.values().next().value;
+const getFirstValue = () => destinationsMap.values().next().value.coordinate.location;
 const getLastValue = () => [...destinationsMap][destinationsMap.size - 1][1];
