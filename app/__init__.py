@@ -3,7 +3,7 @@ import json
 
 # from sys import last_traceback
 # from typing_extensions import OrderedDict
-from flask import Flask, request, redirect, url_for, session, render_template
+from flask import Flask, request, jsonify, redirect, url_for, session, render_template
 from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
@@ -147,8 +147,8 @@ def addDest(order, place_id, area_name, lat, lng, trip_id):
         lng=lng,
         trip_id=trip_id,
     )
-    trip = Trip.query.filter_by(person_id=trip_id).first()
-    print(trip.destination)
+    # trip = Trip.query.filter_by(person_id=trip_id).first()
+    # print(trip.destination)
     db.session.add(newDest)
     db.session.commit()
 
@@ -262,7 +262,7 @@ def createTrip(trip_name):
     return redirect("/login")
 
 
-@app.route("/api/destination/<trip_id>", methods=["POST"])
+@app.route("/api/destination/<trip_id>", methods=["POST", "GET"])
 def createDestination(trip_id):
     # if get send data, if post save data
     if request.method == "POST":
@@ -276,17 +276,26 @@ def createDestination(trip_id):
             lat = p["location_data"]["coordinate"]["location"]["lat"]
             lng = p["location_data"]["coordinate"]["location"]["lng"]
             addDest(order, place_id, area_name, lat, lng, trip_id)
-
-    # json_data contains an arry of destinations
-    # data model {order: val, location_data: {place_id: val, area_name: val, coordinate: {location: {lat: val, lng: val}}}}
-    # Destination
-    #  - Order number
-    #  - place_id string
-    #  - area_name string
-    #  - lat string
-    #  - lng string
-    # addDest(order, dest_id, trip_id)
-    return redirect("/planner")
+    elif request.method == "GET":
+        # Replace for function once working
+        trip = Trip.query.filter_by(person_id=trip_id).first()
+        if trip != None:
+            dataList = []
+            for dest in trip.destination:
+                tempDictionary = {
+                    "order": dest.order,
+                    "place_id": dest.place_id,
+                    "area_name": dest.area_name,
+                    "lat": dest.lat,
+                    "lng": dest.lng
+                }
+                dataList.append(tempDictionary)
+            
+            print(jsonify(dataList))
+            return jsonify(dataList)
+            #retrieve data and convert to jsons
+        destDic = {}
+    # return redirect("/planner/{trip_id}")
 
 
 @app.before_first_request

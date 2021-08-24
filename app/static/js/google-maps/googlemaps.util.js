@@ -1,7 +1,9 @@
 const destinationsMap = new Map();
 let map, infoWindow, initialMarker;
+let trip_id = window.location.href[window.location.href.length - 2];
 
 function initMap() {
+
   let options = {
     center: { lat: 25.34, lng: 137.8 },
     zoom: 2.5,
@@ -23,16 +25,18 @@ function initMap() {
     draggable: true,
     map,
   });
+
   const geocoder = new google.maps.Geocoder();
   directionsRenderer.addListener("directions_changed", () => {
-    const directions = directionsRenderer.getDirections();
-
-    if (directions) {
-      computeTotalDistance(directions);
-    }
-    geocodeAddress(geocoder, directionsRenderer);
-    updateList();
+    updateDirectionsInMap(directionsRenderer, geocoder);
   });
+
+  window.onload = () => {
+    console.log("loaded")
+    fetchDestinations();
+    updateDirectionsInMap(directionsRenderer, geocoder);
+    displayRoute(directionsService, directionsRenderer);
+  }
 
   map.addListener("click", async (mapsMouseEvent) => {
     await addElementToMap(geocoder, mapsMouseEvent.latLng);
@@ -62,11 +66,21 @@ function initLocationButton(map) {
   API Requests
 */
 function fetchDestinations() {
-  fetch("http://localhost:5000/api/create_destination/1").then((data) =>
-    data.json()
-  );
-  //Set destinations map by iterating through data
-  //call in init
+  fetch(`http://localhost:5000/api/destination/${trip_id}`)
+    .then((res) => res.json())
+    .then(data => {
+      if (data) {
+        data.forEach(item => {
+          let coordinates = `${item.lat}, ${item.lng}`
+          buildMap(item.order,
+            item.place_id,
+            item.area_name,
+            coordinates
+          )
+        })
+      }
+      console.log(destinationsMap)
+    });
 }
 
 function saveDestinations() {
@@ -77,7 +91,7 @@ function saveDestinations() {
     });
     let data = JSON.stringify(destinationsArr);
 
-    fetch("http://localhost:5000/api/destination/1", {
+    fetch(`http://localhost:5000/api/destination/${trip_id}`, {
       method: "POST",
       body: data,
     }).then((res) => {
@@ -116,6 +130,15 @@ function moveToCurrentLocation(infoWindow) {
 /*
   Directions service
 */
+function updateDirectionsInMap(service, geocoder) {
+  const directions = service.getDirections();
+
+  if (directions) {
+    computeTotalDistance(directions);
+  }
+  geocodeAddress(geocoder, service);
+  updateList();
+}
 async function displayRoute(service, display) {
   let waypoints = [];
   //Create list of stops without origin and destination
